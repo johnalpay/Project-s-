@@ -1,14 +1,14 @@
 {
-  "name": "simple-portfolio",
+  "name": "my-project-portfolio",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cookie-parser": "^1.4.6",
-    "jsonwebtoken": "^9.0.0",
-    "bcrypt": "^5.1.0"
+    "next": "13.4.7",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   }
 }
