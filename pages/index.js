@@ -97,22 +97,14 @@ export default function Home() {
 
       <footer style={{ marginTop: 40 }}>
         <a
-          href="https://www.facebook.com/profile.php?id=61576992292379"
-          target="_blank"
-          style={{
-            background: '#1877f2',
-            color: '#fff',
-            padding: '10px 20px',
-            borderRadius: 10,
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-          }}
-        >
-          <span>Follow me</span>
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07c0 5.02 3.66 9.17 8.44 9.93v-7.03h-2.54v-2.9h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34v7.03C18.34 21.24 22 17.09 22 12.07z"/></svg>
-        </a>
+  href="https://www.facebook.com/profile.php?id=61576992292379"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-white flex items-center justify-center gap-2 hover:underline"
+>
+  <img src="/facebook-icon.png" alt="Facebook" className="w-5 h-5" />
+  Follow me on Facebook
+</a>
       </footer>
     </div>
   );
