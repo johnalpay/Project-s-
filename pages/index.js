@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [view, setView] = useState("login"); // "login" | "signup" | "home"
+  const [view, setView] = useState("login"); 
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
@@ -96,7 +96,7 @@ export default function Home() {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#8B0000", // dark red
+        backgroundColor: "#8B0000",
         color: "#fff",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
         display: "flex",
@@ -298,7 +298,11 @@ export default function Home() {
           </div>
 
           <button
-            onClick={handleLogout}
+            onClick={() => {
+              localStorage.removeItem("user");
+              setUser(null);
+              setView("login");
+            }}
             style={{
               padding: "10px 20px",
               backgroundColor: "#FF4500",
@@ -338,11 +342,10 @@ export default function Home() {
           width="24px"
           height="24px"
         >
-          <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.406.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.796.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.764v2.314h3.59l-.467 3.622h-3.123V24h6.116c.73 0 1.324-.593 1.324-1.326V1.326C24 .593 23.406 0 22.675 0z" />
+          <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.406.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116c.73 0 1.324-.594 1.324-1.326V1.326C24 .593 23.406 0 22.675 0z" />
         </svg>
-        Follow me on Facebook
+        Follow Me on Facebook
       </a>
     </div>
   );
-        }
-              
+      }
