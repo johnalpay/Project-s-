@@ -20,7 +20,7 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
-  const [view, setView] = useState("home"); // home, login, signup
+  const [view, setView] = useState("home");
   const [user, setUser] = useState(null);
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
@@ -97,33 +97,13 @@ export default function Home() {
         <nav>
           {!user ? (
             <>
-              <button
-                style={styles.navButton}
-                onClick={() => {
-                  setView("login");
-                  setMessage("");
-                }}
-              >
-                Login
-              </button>
-              <button
-                style={styles.navButton}
-                onClick={() => {
-                  setView("signup");
-                  setMessage("");
-                }}
-              >
-                Sign Up
-              </button>
+              <button style={styles.navButton} onClick={() => { setView("login"); setMessage(""); }}>Login</button>
+              <button style={styles.navButton} onClick={() => { setView("signup"); setMessage(""); }}>Sign Up</button>
             </>
           ) : (
             <>
-              <span style={{ marginRight: 15, fontWeight: "600" }}>
-                Welcome, {user}!
-              </span>
-              <button style={styles.navButton} onClick={handleLogout}>
-                Logout
-              </button>
+              <span style={{ marginRight: 15, fontWeight: "600" }}>Welcome, {user}!</span>
+              <button style={styles.navButton} onClick={handleLogout}>Logout</button>
             </>
           )}
         </nav>
@@ -138,11 +118,7 @@ export default function Home() {
           <p style={styles.description}>Here are the websites I have built.</p>
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
-              <div
-                key={project.name}
-                style={styles.projectCard}
-                className="project-card"
-              >
+              <div key={project.name} style={styles.projectCard} className="project-card">
                 <h2 style={styles.projectName}>{project.name}</h2>
                 <p style={styles.projectDesc}>{project.description}</p>
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
@@ -155,10 +131,7 @@ export default function Home() {
       )}
 
       {(view === "login" || view === "signup") && (
-        <form
-          onSubmit={view === "login" ? handleLogin : handleSignup}
-          style={styles.form}
-        >
+        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
           <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
           {message && <p style={styles.message}>{message}</p>}
           <input
@@ -177,52 +150,19 @@ export default function Home() {
             style={styles.input}
             autoComplete={view === "login" ? "current-password" : "new-password"}
           />
-          <button type="submit" style={styles.button}>
-            {view === "login" ? "Login" : "Sign Up"}
-          </button>
+          <button type="submit" style={styles.button}>{view === "login" ? "Login" : "Sign Up"}</button>
           <p style={{ marginTop: 12 }}>
             {view === "login" ? (
-              <>
-                Don't have an account?{" "}
-                <button
-                  type="button"
-                  style={styles.linkButton}
-                  onClick={() => {
-                    setView("signup");
-                    setMessage("");
-                  }}
-                >
-                  Sign Up
-                </button>
-              </>
+              <>Don't have an account? <button type="button" style={styles.linkButton} onClick={() => { setView("signup"); setMessage(""); }}>Sign Up</button></>
             ) : (
-              <>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  style={styles.linkButton}
-                  onClick={() => {
-                    setView("login");
-                    setMessage("");
-                  }}
-                >
-                  Login
-                </button>
-              </>
+              <>Already have an account? <button type="button" style={styles.linkButton} onClick={() => { setView("login"); setMessage(""); }}>Login</button></>
             )}
           </p>
         </form>
       )}
 
       <footer style={styles.footer}>
-        <a
-          href="https://www.facebook.com/profile.php?id=61576992292379"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={styles.followButton}
-          aria-label="Follow on Facebook"
-          className="follow-button"
-        >
+        <a href="https://www.facebook.com/profile.php?id=61576992292379" target="_blank" rel="noopener noreferrer" style={styles.followButton} className="follow-button">
           <FacebookIcon /> Follow me on Facebook
         </a>
       </footer>
@@ -236,7 +176,6 @@ export default function Home() {
           color: #fff;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         main {
           min-height: 100vh;
           padding: 50px 20px 60px;
@@ -245,17 +184,14 @@ export default function Home() {
           flex-direction: column;
           align-items: center;
         }
-
         .project-card:hover {
           box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
           transition: box-shadow 0.3s ease;
         }
-
         button:hover {
           background-color: #3b82f6;
           transition: background-color 0.3s ease;
         }
-
         .follow-button:hover {
           background-color: #2563eb;
           color: #fff;
@@ -263,7 +199,6 @@ export default function Home() {
           box-shadow: 0 6px 15px rgba(37, 99, 235, 0.7);
           transition: all 0.3s ease;
         }
-
         .follow-button:active {
           transform: scale(0.95);
         }
@@ -274,14 +209,7 @@ export default function Home() {
 
 function FacebookIcon() {
   return (
-    <svg
-      style={{ marginRight: 8 }}
-      xmlns="http://www.w3.org/2000/svg"
-      height="20"
-      viewBox="0 0 24 24"
-      width="20"
-      fill="#3b82f6"
-    >
+    <svg style={{ marginRight: 8 }} xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="#3b82f6">
       <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.406.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.764v2.313h3.59l-.467 3.622h-3.123V24h6.116C23.406 24 24 23.406 24 22.674V1.326C24 .593 23.406 0 22.675 0z" />
     </svg>
   );
@@ -390,30 +318,22 @@ const styles = {
     color: "#60a5fa",
     cursor: "pointer",
     fontWeight: "600",
-    fontSize: 14,
   },
   footer: {
-    marginTop: 40,
-    width: "100%",
-    maxWidth: 540,
-    marginLeft: "auto",
-    marginRight: "auto",
+    marginTop: 50,
     textAlign: "center",
   },
   followButton: {
     display: "inline-flex",
     alignItems: "center",
-    gap: 8,
-    padding: "12px 28px",
-    fontWeight: "700",
+    padding: "10px 16px",
     fontSize: 15,
-    color: "#3b82f6",
-    backgroundColor: "transparent",
-    border: "2px solid #3b82f6",
-    borderRadius: 50,
-    cursor: "pointer",
-    userSelect: "none",
+    fontWeight: "600",
+    backgroundColor: "#1e40af",
+    color: "#e0e7ff",
+    borderRadius: 8,
     textDecoration: "none",
+    border: "1px solid #1e40af",
+    cursor: "pointer",
   },
 };
-                  
