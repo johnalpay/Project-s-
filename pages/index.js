@@ -20,10 +20,8 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
-  const [view, setView] = useState("home"); // "home", "login", "signup"
+  const [view, setView] = useState("home"); // home, login, signup
   const [user, setUser] = useState(null);
-
-  // For form fields
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -44,7 +42,6 @@ export default function Home() {
     month: "long",
     day: "numeric",
   });
-
   const formattedTime = dateTime.toLocaleTimeString();
 
   function handleSignup(e) {
@@ -53,15 +50,12 @@ export default function Home() {
       setMessage("Please fill in both fields.");
       return;
     }
-
     const usersJSON = localStorage.getItem("users");
     const users = usersJSON ? JSON.parse(usersJSON) : {};
-
     if (users[formUsername]) {
       setMessage("Username already exists. Please login or choose another.");
       return;
     }
-
     users[formUsername] = formPassword;
     localStorage.setItem("users", JSON.stringify(users));
     setMessage("Signup successful! Please login now.");
@@ -76,10 +70,8 @@ export default function Home() {
       setMessage("Please fill in both fields.");
       return;
     }
-
     const usersJSON = localStorage.getItem("users");
     const users = usersJSON ? JSON.parse(usersJSON) : {};
-
     if (users[formUsername] && users[formUsername] === formPassword) {
       localStorage.setItem("loggedInUser", formUsername);
       setUser(formUsername);
@@ -144,7 +136,6 @@ export default function Home() {
       {view === "home" && (
         <>
           <p style={styles.description}>Here are the websites I have built.</p>
-
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
               <div
@@ -155,9 +146,7 @@ export default function Home() {
                 <h2 style={styles.projectName}>{project.name}</h2>
                 <p style={styles.projectDesc}>{project.description}</p>
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
-                  <button style={styles.button} className="visit-button">
-                    Visit
-                  </button>
+                  <button style={styles.button}>Visit</button>
                 </a>
               </div>
             ))}
@@ -250,7 +239,7 @@ export default function Home() {
 
         main {
           min-height: 100vh;
-          padding: 50px 25px 60px;
+          padding: 50px 20px 60px;
           box-sizing: border-box;
           display: flex;
           flex-direction: column;
@@ -258,18 +247,13 @@ export default function Home() {
         }
 
         .project-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+          transition: box-shadow 0.3s ease;
         }
 
-        .visit-button:hover {
+        button:hover {
           background-color: #3b82f6;
-          box-shadow: 0 6px 15px rgba(59, 130, 246, 0.7);
-          transform: scale(1.05);
-        }
-
-        .visit-button:active {
-          transform: scale(0.98);
+          transition: background-color 0.3s ease;
         }
 
         .follow-button:hover {
@@ -277,7 +261,7 @@ export default function Home() {
           color: #fff;
           border-color: #1e40af;
           box-shadow: 0 6px 15px rgba(37, 99, 235, 0.7);
-          transform: scale(1.07);
+          transition: all 0.3s ease;
         }
 
         .follow-button:active {
@@ -305,33 +289,24 @@ function FacebookIcon() {
 
 const styles = {
   container: {
-    maxWidth: 700,
-    margin: 0,
-    padding: "50px 25px 60px",
-    textAlign: "center",
-    backgroundColor: "#1E3A8A",
-    minHeight: "100vh",
-    color: "#fff",
-    boxSizing: "border-box",
-    borderRadius: 12,
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    maxWidth: 540,
+    width: "100%",
+    margin: "0 auto",
   },
   header: {
+    width: "100%",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 35,
-    maxWidth: 700,
-    marginLeft: "auto",
-    marginRight: "auto",
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     margin: 0,
   },
   navButton: {
     marginLeft: 12,
-    padding: "7px 14px",
+    padding: "7px 16px",
     fontSize: 14,
     fontWeight: "600",
     backgroundColor: "#2563eb",
@@ -339,76 +314,75 @@ const styles = {
     borderRadius: 6,
     color: "#e0e7ff",
     cursor: "pointer",
-    transition: "background-color 0.3s ease",
   },
   dateTime: {
-    marginBottom: 30,
+    marginBottom: 28,
     fontWeight: "600",
     fontSize: 16,
+    textAlign: "center",
   },
   description: {
     marginBottom: 20,
     fontSize: 18,
+    textAlign: "center",
   },
   projectsContainer: {
     display: "flex",
     flexDirection: "column",
-    gap: 20,
-    maxWidth: 700,
-    margin: "0 auto",
+    gap: 18,
   },
   projectCard: {
-    width: 700,
+    width: "100%",
     backgroundColor: "#2563eb",
     padding: 20,
-    borderRadius: 10,
-    boxShadow: "0 6px 15px rgba(37, 99, 235, 0.5)",
+    borderRadius: 8,
+    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
     color: "#e0e7ff",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
     cursor: "pointer",
-    margin: "0 auto",
     boxSizing: "border-box",
+    transition: "box-shadow 0.3s ease",
   },
   projectName: {
-    fontSize: 22,
-    margin: "0 0 10px 0",
+    fontSize: 20,
+    margin: "0 0 8px 0",
   },
   projectDesc: {
-    fontSize: 16,
-    margin: "0 0 15px 0",
+    fontSize: 15,
+    margin: "0 0 12px 0",
   },
   button: {
     backgroundColor: "#3b82f6",
     border: "none",
-    padding: "10px 25px",
-    fontSize: 16,
+    padding: "10px 24px",
+    fontSize: 15,
     color: "#fff",
-    borderRadius: 8,
+    borderRadius: 6,
     cursor: "pointer",
-    transition: "all 0.3s ease",
   },
   form: {
+    width: "100%",
     maxWidth: 400,
     margin: "0 auto",
     backgroundColor: "#2563eb",
-    padding: 25,
-    borderRadius: 10,
+    padding: 28,
+    borderRadius: 8,
     boxShadow: "0 6px 15px rgba(37, 99, 235, 0.5)",
     color: "#e0e7ff",
   },
   input: {
     width: "100%",
     padding: 10,
-    marginBottom: 15,
+    marginBottom: 14,
     borderRadius: 6,
     border: "none",
-    fontSize: 16,
+    fontSize: 15,
     boxSizing: "border-box",
   },
   message: {
     color: "#f87171",
-    marginBottom: 12,
+    marginBottom: 14,
     fontWeight: "600",
+    textAlign: "center",
   },
   linkButton: {
     background: "none",
@@ -419,18 +393,20 @@ const styles = {
     fontSize: 14,
   },
   footer: {
-    marginTop: 50,
-    maxWidth: 700,
+    marginTop: 40,
+    width: "100%",
+    maxWidth: 540,
     marginLeft: "auto",
     marginRight: "auto",
+    textAlign: "center",
   },
   followButton: {
     display: "inline-flex",
     alignItems: "center",
     gap: 8,
-    padding: "12px 30px",
+    padding: "12px 28px",
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 15,
     color: "#3b82f6",
     backgroundColor: "transparent",
     border: "2px solid #3b82f6",
@@ -438,7 +414,6 @@ const styles = {
     cursor: "pointer",
     userSelect: "none",
     textDecoration: "none",
-    transition: "all 0.3s ease",
   },
 };
-            
+                  
