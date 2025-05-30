@@ -20,10 +20,23 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
+  const [view, setView] = useState("home"); // "home", "login", "signup"
+  const [user, setUser] = useState(null);
+
+  // For form fields
+  const [formUsername, setFormUsername] = useState("");
+  const [formPassword, setFormPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    // Check localStorage for logged in user
+    const savedUser = localStorage.getItem("loggedInUser");
+    if (savedUser) setUser(savedUser);
   }, []);
 
   const formattedDate = dateTime.toLocaleDateString(undefined, {
@@ -35,26 +48,148 @@ export default function Home() {
 
   const formattedTime = dateTime.toLocaleTimeString();
 
+  // Signup handler
+  function handleSignup(e) {
+    e.preventDefault();
+    if (!formUsername || !formPassword) {
+      setMessage("Please fill in both fields.");
+      return;
+    }
+
+    const usersJSON = localStorage.getItem("users");
+    const users = usersJSON ? JSON.parse(usersJSON) : {};
+
+    if (users[formUsername]) {
+      setMessage("Username already exists. Please login or choose another.");
+      return;
+    }
+
+    users[formUsername] = formPassword;
+    localStorage.setItem("users", JSON.stringify(users));
+    setMessage("Signup successful! Please login now.");
+    setFormUsername("");
+    setFormPassword("");
+    setView("login");
+  }
+
+  // Login handler
+  function handleLogin(e) {
+    e.preventDefault();
+    if (!formUsername || !formPassword) {
+      setMessage("Please fill in both fields.");
+      return;
+    }
+
+    const usersJSON = localStorage.getItem("users");
+    const users = usersJSON ? JSON.parse(usersJSON) : {};
+
+    if (users[formUsername] && users[formUsername] === formPassword) {
+      localStorage.setItem("loggedInUser", formUsername);
+      setUser(formUsername);
+      setMessage("");
+      setFormUsername("");
+      setFormPassword("");
+      setView("home");
+    } else {
+      setMessage("Invalid username or password.");
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("loggedInUser");
+    setUser(null);
+    setView("home");
+  }
+
   return (
     <main style={styles.container}>
-      <h1 style={styles.title}>My Projects</h1>
-      <p style={styles.description}>Here are the websites I have built.</p>
+      <header style={styles.header}>
+        <h1 style={styles.title}>My Projects</h1>
+        <nav>
+          {!user ? (
+            <>
+              <button style={styles.navButton} onClick={() => { setView("login"); setMessage(""); }}>
+                Login
+              </button>
+              <button style={styles.navButton} onClick={() => { setView("signup"); setMessage(""); }}>
+                Sign Up
+              </button>
+            </>
+          ) : (
+            <>
+              <span style={{ marginRight: 15, fontWeight: "600" }}>Welcome, {user}!</span>
+              <button style={styles.navButton} onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          )}
+        </nav>
+      </header>
 
       <div style={styles.dateTime}>
         <span>{formattedDate}</span> | <span>{formattedTime}</span>
       </div>
 
-      <div style={styles.projectsContainer}>
-        {projects.map((project) => (
-          <div key={project.name} style={styles.projectCard} className="project-card">
-            <h2 style={styles.projectName}>{project.name}</h2>
-            <p style={styles.projectDesc}>{project.description}</p>
-            <a href={project.url} target="_blank" rel="noopener noreferrer">
-              <button style={styles.button} className="visit-button">Visit</button>
-            </a>
+      {view === "home" && (
+        <>
+          <p style={styles.description}>Here are the websites I have built.</p>
+
+          <div style={styles.projectsContainer}>
+            {projects.map((project) => (
+              <div key={project.name} style={styles.projectCard} className="project-card">
+                <h2 style={styles.projectName}>{project.name}</h2>
+                <p style={styles.projectDesc}>{project.description}</p>
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  <button style={styles.button} className="visit-button">Visit</button>
+                </a>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
+
+      {(view === "login" || view === "signup") && (
+        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
+          <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
+          {message && <p style={styles.message}>{message}</p>}
+          <input
+            type="text"
+            placeholder="Username"
+            value={formUsername}
+            onChange={(e) => setFormUsername(e.target.value)}
+            style={styles.input}
+            autoComplete="username"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={formPassword}
+            onChange={(e) => setFormPassword(e.target.value)}
+            style={styles.input}
+            autoComplete={view === "login" ? "current-password" : "new-password"}
+          />
+          <button type="submit" style={styles.button}>
+            {view === "login" ? "Login" : "Sign Up"}
+          </button>
+          <p style={{ marginTop: 12 }}>
+            {view === "login" ? (
+              <>
+                Don't have an account?{" "}
+                <button type="button" style={styles.linkButton} onClick={() => { setView("signup"); setMessage(""); }}>
+                  Sign Up
+                </button>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <button type="button" style={styles.linkButton} onClick={() => { setView("login"); setMessage(""); }}>
+                  Login
+                </button>
+              </>
+            )}
+          </p>
+        </form>
+      )}
 
       <footer style={styles.footer}>
         <a
@@ -69,7 +204,6 @@ export default function Home() {
         </a>
       </footer>
 
-      {/* Inline CSS for hover animations */}
       <style jsx>{`
         .project-card:hover {
           transform: translateY(-8px);
@@ -96,10 +230,6 @@ export default function Home() {
 
         .follow-button:active {
           transform: scale(0.95);
-        }
-
-        main {
-          transition: background-color 0.3s ease;
         }
       `}</style>
     </main>
@@ -134,17 +264,30 @@ const styles = {
     boxSizing: "border-box",
     borderRadius: 12,
   },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
   title: {
     fontSize: 44,
-    marginBottom: 14,
+    margin: 0,
     fontWeight: "700",
     textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
   },
-  description: {
-    fontSize: 20,
-    marginBottom: 35,
-    color: "#ffdede",
-    textShadow: "1px 1px 3px rgba(0,0,0,0.2)",
+  navButton: {
+    marginLeft: 12,
+    backgroundColor: "#ff6f61",
+    border: "none",
+    borderRadius: 10,
+    padding: "8px 16px",
+    color: "#4b0000",
+    fontWeight: "700",
+    cursor: "pointer",
+    fontSize: 15,
+    boxShadow: "0 2px 10px rgba(255,111,97,0.6)",
+    transition: "background-color 0.3s ease",
   },
   dateTime: {
     fontSize: 15,
@@ -152,6 +295,12 @@ const styles = {
     marginBottom: 35,
     fontWeight: "600",
     textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+  },
+  description: {
+    fontSize: 20,
+    marginBottom: 35,
+    color: "#ffdede",
+    textShadow: "1px 1px 3px rgba(0,0,0,0.2)",
   },
   projectsContainer: {
     display: "grid",
@@ -205,5 +354,37 @@ const styles = {
     borderRadius: 35,
     transition: "background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease",
   },
+  form: {
+    backgroundColor: "#8b0000",
+    padding: 30,
+    borderRadius: 20,
+    boxShadow: "0 4px 18px rgba(0,0,0,0.4)",
+    maxWidth: 400,
+    margin: "auto",
+  },
+  input: {
+    display: "block",
+    width: "100%",
+    padding: 10,
+    marginBottom: 18,
+    borderRadius: 8,
+    border: "none",
+    fontSize: 16,
+  },
+  message: {
+    marginBottom: 18,
+    color: "#ffb3b3",
+    fontWeight: "600",
+  },
+  linkButton: {
+    background: "none",
+    border: "none",
+    color: "#ff6f61",
+    cursor: "pointer",
+    fontWeight: "700",
+    textDecoration: "underline",
+    padding: 0,
+    fontSize: 15,
+  },
 };
-  
+    
