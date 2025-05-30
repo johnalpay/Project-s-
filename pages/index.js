@@ -20,10 +20,9 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
-  const [view, setView] = useState("home"); // "home", "login", "signup"
+  const [view, setView] = useState("home");
   const [user, setUser] = useState(null);
 
-  // For form fields
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -34,7 +33,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Check localStorage for logged in user
     const savedUser = localStorage.getItem("loggedInUser");
     if (savedUser) setUser(savedUser);
   }, []);
@@ -48,7 +46,6 @@ export default function Home() {
 
   const formattedTime = dateTime.toLocaleTimeString();
 
-  // Signup handler
   function handleSignup(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -72,7 +69,6 @@ export default function Home() {
     setView("login");
   }
 
-  // Login handler
   function handleLogin(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -130,10 +126,9 @@ export default function Home() {
         <span>{formattedDate}</span> | <span>{formattedTime}</span>
       </div>
 
-      {view === "home" && (
+      {user && view === "home" && (
         <>
           <p style={styles.description}>Here are the websites I have built.</p>
-
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
               <div key={project.name} style={styles.projectCard} className="project-card">
@@ -146,6 +141,10 @@ export default function Home() {
             ))}
           </div>
         </>
+      )}
+
+      {!user && view === "home" && (
+        <p style={{ color: "#fff", marginTop: 40 }}>Please login or sign up to view the projects.</p>
       )}
 
       {(view === "login" || view === "signup") && (
@@ -209,17 +208,14 @@ export default function Home() {
           transform: translateY(-8px);
           box-shadow: 0 12px 24px rgba(0,0,0,0.5);
         }
-
         .visit-button:hover {
           background-color: #ff4b45;
           box-shadow: 0 6px 15px rgba(255,75,69,0.7);
           transform: scale(1.05);
         }
-
         .visit-button:active {
           transform: scale(0.98);
         }
-
         .follow-button:hover {
           background-color: #E94560;
           color: #fff;
@@ -227,7 +223,6 @@ export default function Home() {
           box-shadow: 0 6px 15px rgba(233,69,96,0.7);
           transform: scale(1.07);
         }
-
         .follow-button:active {
           transform: scale(0.95);
         }
@@ -258,7 +253,7 @@ const styles = {
     padding: "0 25px 60px",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     textAlign: "center",
-    backgroundColor: "#b22222", // firebrick red
+    backgroundColor: "#b22222",
     minHeight: "100vh",
     color: "#fff",
     boxSizing: "border-box",
@@ -310,81 +305,73 @@ const styles = {
   projectCard: {
     padding: 24,
     borderRadius: 16,
-    boxShadow:
-      "0 4px 18px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.25)",
-    backgroundColor: "#8b0000", // dark red
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-    cursor: "default",
+    boxShadow: "0 4px 18px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.2)",
+    backgroundColor: "#fff0f0",
+    color: "#4b0000",
+    transition: "all 0.3s ease",
   },
   projectName: {
-    fontSize: 26,
-    marginBottom: 8,
-    color: "#ff6f61", // pastel red-ish
-    textShadow: "1px 1px 3px rgba(0,0,0,0.3)",
+    fontSize: 24,
+    fontWeight: "700",
   },
   projectDesc: {
-    fontSize: 17,
-    marginBottom: 18,
-    color: "#ffb3b3",
+    fontSize: 14,
+    marginBottom: 16,
   },
   button: {
-    padding: "10px 26px",
-    fontSize: 16,
+    padding: "10px 20px",
+    backgroundColor: "#E94560",
+    color: "#fff",
+    border: "none",
+    borderRadius: 12,
     fontWeight: "700",
     cursor: "pointer",
-    backgroundColor: "#ff6f61",
-    border: "none",
-    borderRadius: 10,
-    color: "#4b0000",
-    boxShadow: "0 2px 10px rgba(255,111,97,0.6)",
-    transition: "background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease",
-  },
-  footer: {
-    marginTop: 50,
-  },
-  followButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    fontSize: 19,
-    fontWeight: "700",
-    textDecoration: "none",
-    color: "#E94560",
-    border: "2px solid #E94560",
-    padding: "10px 24px",
-    borderRadius: 35,
-    transition: "background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease",
+    transition: "all 0.3s ease",
   },
   form: {
-    backgroundColor: "#8b0000",
+    backgroundColor: "#fff0f0",
+    color: "#4b0000",
     padding: 30,
-    borderRadius: 20,
-    boxShadow: "0 4px 18px rgba(0,0,0,0.4)",
+    borderRadius: 16,
     maxWidth: 400,
-    margin: "auto",
+    margin: "40px auto",
+    textAlign: "left",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
   },
   input: {
-    display: "block",
     width: "100%",
     padding: 10,
-    marginBottom: 18,
+    marginBottom: 16,
     borderRadius: 8,
-    border: "none",
+    border: "1px solid #ccc",
     fontSize: 16,
   },
   message: {
-    marginBottom: 18,
-    color: "#ffb3b3",
+    color: "#b22222",
     fontWeight: "600",
   },
   linkButton: {
     background: "none",
+    color: "#b22222",
     border: "none",
-    color: "#ff6f61",
     cursor: "pointer",
-    fontWeight: "700",
+    fontWeight: "600",
     textDecoration: "underline",
-    padding: 0,
-    fontSize: 15,
+  },
+  footer: {
+    marginTop: 40,
+  },
+  followButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    backgroundColor: "#fff0f0",
+    color: "#b22222",
+    fontWeight: "700",
+    padding: "10px 18px",
+    borderRadius: 12,
+    textDecoration: "none",
+    border: "2px solid #b22222",
+    transition: "all 0.3s ease",
   },
 };
     
