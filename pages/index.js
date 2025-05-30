@@ -1,171 +1,23 @@
 import { useState, useEffect } from "react";
 
-const projects = [
-  {
-    name: "Lyrics Finder",
-    description: "Find lyrics to your favorite songs.",
-    url: "https://lyrics-liart.vercel.app/",
-  },
-  {
-    name: "Profile Guard",
-    description: "Protect your Facebook profile picture.",
-    url: "https://profile-guard.vercel.app/",
-  },
-  {
-    name: "Token Getter (Cookie Method)",
-    description: "Get your Facebook token safely.",
-    url: "https://getnew-xi.vercel.app/",
-  },
-];
-
-const styles = {
-  container: {
-    minHeight: "100vh",
-    backgroundColor: "#b71c1c", // dark red bg
-    color: "#fff",
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    padding: 20,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  header: {
-    fontSize: 42,
-    fontWeight: "bold",
-    margin: "20px 0 10px",
-    textShadow: "2px 2px 6px #6b0000",
-  },
-  dateTime: {
-    fontSize: 16,
-    marginBottom: 40,
-    color: "#ffcdd2",
-  },
-  description: {
-    fontSize: 22,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  projectsContainer: {
-    display: "flex",
-    gap: 20,
-    flexWrap: "wrap",
-    justifyContent: "center",
-    maxWidth: 900,
-  },
-  projectCard: {
-    background:
-      "linear-gradient(135deg, #ff5252 0%, #b71c1c 100%)",
-    borderRadius: 12,
-    boxShadow: "0 4px 15px rgba(255, 82, 82, 0.5)",
-    padding: 25,
-    width: 280,
-    color: "#fff",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    transition: "transform 0.3s ease",
-  },
-  projectName: {
-    fontSize: 26,
-    marginBottom: 10,
-  },
-  projectDesc: {
-    fontSize: 16,
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: "#ff1744",
-    border: "none",
-    borderRadius: 30,
-    padding: "10px 22px",
-    color: "#fff",
-    fontSize: 18,
-    cursor: "pointer",
-    boxShadow: "0 6px 15px #ff1744cc",
-    transition: "background-color 0.3s ease",
-  },
-  buttonHover: {
-    backgroundColor: "#ff4569",
-  },
-  footer: {
-    marginTop: 60,
-    fontSize: 14,
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-  },
-  facebookButton: {
-    backgroundColor: "#1877f2",
-    border: "none",
-    borderRadius: 30,
-    padding: "8px 14px",
-    color: "#fff",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-    fontWeight: "600",
-    fontSize: 15,
-    textDecoration: "none",
-  },
-  facebookIcon: {
-    width: 20,
-    height: 20,
-    fill: "#fff",
-  },
-  formContainer: {
-    backgroundColor: "#8b0000",
-    padding: 30,
-    borderRadius: 14,
-    boxShadow: "0 4px 18px rgba(0,0,0,0.4)",
-    width: 350,
-    display: "flex",
-    flexDirection: "column",
-    gap: 15,
-  },
-  input: {
-    padding: 10,
-    fontSize: 16,
-    borderRadius: 6,
-    border: "none",
-    outline: "none",
-  },
-  linkButton: {
-    background: "none",
-    border: "none",
-    color: "#ffcdd2",
-    textDecoration: "underline",
-    cursor: "pointer",
-    fontSize: 16,
-  },
-  errorText: {
-    color: "#ff8080",
-    fontWeight: "bold",
-    fontSize: 14,
-  },
-};
-
 export default function Home() {
-  const [view, setView] = useState("home"); // home, login, signup
+  const [view, setView] = useState("login"); // "login" | "signup" | "home"
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
   const [user, setUser] = useState(null);
   const [dateTime, setDateTime] = useState(new Date());
 
-  // Form states
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setDateTime(new Date());
-    }, 1000);
-    return () => clearInterval(interval);
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      setUser(savedUser);
+      setView("home");
+    }
   }, []);
 
-  // Save user to localStorage for persistence
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const timer = setInterval(() => setDateTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const saveUser = (u) => {
@@ -173,19 +25,26 @@ export default function Home() {
     localStorage.setItem("user", JSON.stringify(u));
   };
 
-  // Simple fake signup/login logic (no backend)
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleSignup = () => {
     const { username, password } = formData;
     if (!username || !password) {
       setError("Please fill in all fields.");
       return;
     }
-    // Save user in localStorage as simple demo
-    const newUser = { username, password };
-    localStorage.setItem("users", JSON.stringify([...(JSON.parse(localStorage.getItem("users")) || []), newUser]));
-    saveUser({ username });
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    if (users.find((u) => u.username === username)) {
+      setError("Username already taken.");
+      return;
+    }
+    users.push({ username, password });
+    localStorage.setItem("users", JSON.stringify(users));
     setError("");
-    setView("home");
+    alert("Account created successfully! Please login.");
+    setView("login");
     setFormData({ username: "", password: "" });
   };
 
@@ -195,10 +54,12 @@ export default function Home() {
       setError("Please fill in all fields.");
       return;
     }
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const foundUser = users.find((u) => u.username === username && u.password === password);
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    const foundUser = users.find(
+      (u) => u.username === username && u.password === password
+    );
     if (foundUser) {
-      saveUser({ username });
+      saveUser({ username: foundUser.username });
       setError("");
       setView("home");
       setFormData({ username: "", password: "" });
@@ -210,138 +71,278 @@ export default function Home() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    setView("home");
+    setView("login");
   };
 
+  const projects = [
+    {
+      name: "Lyrics",
+      url: "https://lyrics-liart.vercel.app/",
+      color: "#FFD700",
+    },
+    {
+      name: "Profile Guard",
+      url: "https://profile-guard.vercel.app/",
+      color: "#FF6347",
+    },
+    {
+      name: "Token Getter (Cookie Method)",
+      url: "https://getnew-xi.vercel.app/",
+      color: "#40E0D0",
+    },
+  ];
+
   return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>My Projects Showcase</h1>
-      <div style={styles.dateTime}>
-        {dateTime.toLocaleDateString()} • {dateTime.toLocaleTimeString()}
-      </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#8B0000", // dark red
+        color: "#fff",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "2rem",
+      }}
+    >
+      <h1 style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>
+        Welcome to My Projects
+      </h1>
+      <p style={{ marginBottom: "1rem", fontSize: "1.2rem" }}>
+        {dateTime.toLocaleDateString()} - {dateTime.toLocaleTimeString()}
+      </p>
 
-      {view === "home" && (
-        <>
-          {!user ? (
-            <p style={{ fontSize: 18, color: "#ffb3b3", marginBottom: 40, textAlign: "center" }}>
-              Please{" "}
-              <button style={styles.linkButton} onClick={() => setView("login")}>
-                login
-              </button>{" "}
-              or{" "}
-              <button style={styles.linkButton} onClick={() => setView("signup")}>
-                sign up
-              </button>{" "}
-              to access the projects.
-            </p>
-          ) : (
-            <>
-              <p style={styles.description}>Here are the websites I have built.</p>
-
-              <div style={styles.projectsContainer}>
-                {projects.map((project) => (
-                  <div
-                    key={project.name}
-                    style={styles.projectCard}
-                    className="project-card"
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                  >
-                    <h2 style={styles.projectName}>{project.name}</h2>
-                    <p style={styles.projectDesc}>{project.description}</p>
-                    <a href={project.url} target="_blank" rel="noopener noreferrer">
-                      <button style={styles.button} className="visit-button">
-                        Visit
-                      </button>
-                    </a>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                style={{ ...styles.button, marginTop: 40, backgroundColor: "#b71c1c" }}
-                onClick={handleLogout}
-              >
-                Logout ({user.username})
-              </button>
-            </>
-          )}
-        </>
-      )}
-
-      {(view === "login" || view === "signup") && (
-        <div style={styles.formContainer}>
-          <h2 style={{ marginBottom: 10 }}>{view === "login" ? "Login" : "Sign Up"}</h2>
+      {!user ? (
+        <div
+          style={{
+            backgroundColor: "#B22222",
+            padding: "2rem",
+            borderRadius: "10px",
+            width: "320px",
+            boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)",
+          }}
+        >
+          <h2 style={{ marginBottom: "1rem", textAlign: "center" }}>
+            {view === "login" ? "Login" : "Sign Up"}
+          </h2>
 
           <input
-            style={styles.input}
-            type="text"
+            name="username"
             placeholder="Username"
             value={formData.username}
-            onChange={(e) => setFormData((prev) => ({ ...prev, username: e.target.value }))}
+            onChange={handleChange}
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginBottom: "0.8rem",
+              borderRadius: "5px",
+              border: "none",
+              fontSize: "1rem",
+            }}
           />
           <input
-            style={styles.input}
             type="password"
+            name="password"
             placeholder="Password"
             value={formData.password}
-            onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+            onChange={handleChange}
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginBottom: "1rem",
+              borderRadius: "5px",
+              border: "none",
+              fontSize: "1rem",
+            }}
           />
-          {error && <p style={styles.errorText}>{error}</p>}
 
-          <button
-            style={{ ...styles.button, marginTop: 10 }}
-            onClick={view === "login" ? handleLogin : handleSignup}
-          >
-            {view === "login" ? "Login" : "Sign Up"}
-          </button>
+          {error && (
+            <p style={{ color: "#FFD700", marginBottom: "1rem" }}>{error}</p>
+          )}
 
-          <p style={{ marginTop: 15, fontSize: 14, color: "#ffcdd2" }}>
-            {view === "login" ? (
-              <>
+          {view === "login" ? (
+            <>
+              <button
+                type="button"
+                onClick={handleLogin}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  backgroundColor: "#FF4500",
+                  border: "none",
+                  borderRadius: "5px",
+                  color: "white",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Login
+              </button>
+              <p style={{ textAlign: "center" }}>
                 Don't have an account?{" "}
-                <button style={styles.linkButton} onClick={() => setView("signup")}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setError("");
+                    setView("signup");
+                    setFormData({ username: "", password: "" });
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#FFD700",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                    fontWeight: "bold",
+                    padding: 0,
+                  }}
+                >
                   Sign Up
                 </button>
-              </>
-            ) : (
-              <>
+              </p>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={handleSignup}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  backgroundColor: "#FF4500",
+                  border: "none",
+                  borderRadius: "5px",
+                  color: "white",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Create Account
+              </button>
+              <p style={{ textAlign: "center" }}>
                 Already have an account?{" "}
-                <button style={styles.linkButton} onClick={() => setView("login")}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setError("");
+                    setView("login");
+                    setFormData({ username: "", password: "" });
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#FFD700",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                    fontWeight: "bold",
+                    padding: 0,
+                  }}
+                >
                   Login
                 </button>
-              </>
-            )}
-          </p>
-          <button
-            style={{ ...styles.button, backgroundColor: "#b71c1c", marginTop: 15 }}
-            onClick={() => setView("home")}
+              </p>
+            </>
+          )}
+        </div>
+      ) : (
+        <div
+          style={{
+            textAlign: "center",
+            maxWidth: "480px",
+            width: "100%",
+          }}
+        >
+          <h2 style={{ marginBottom: "1rem" }}>
+            Hello, <span style={{ color: "#FFD700" }}>{user.username}</span>
+          </h2>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              gap: "1rem",
+              marginBottom: "2rem",
+            }}
           >
-            Back to Home
+            {projects.map(({ name, url, color }) => (
+              <a
+                key={name}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  backgroundColor: color,
+                  color: "#000",
+                  padding: "1rem 1.5rem",
+                  borderRadius: "8px",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  textDecoration: "none",
+                  boxShadow:
+                    "0 4px 6px rgba(0, 0, 0, 0.3), inset 0 -3px 0 rgba(0,0,0,0.15)",
+                  transition: "transform 0.2s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.1)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                {name}
+              </a>
+            ))}
+          </div>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#FF4500",
+              border: "none",
+              borderRadius: "6px",
+              color: "white",
+              fontWeight: "bold",
+              cursor: "pointer",
+              marginBottom: "2rem",
+            }}
+          >
+            Logout
           </button>
         </div>
       )}
 
-      <footer style={styles.footer}>
-        <a
-          href="https://www.facebook.com/profile.php?id=61576992292379"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={styles.facebookButton}
+      {/* Facebook Follow Button */}
+      <a
+        href="https://www.facebook.com/profile.php?id=61576992292379"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+          color: "#3b5998",
+          fontWeight: "bold",
+          textDecoration: "none",
+          fontSize: "1.1rem",
+          marginTop: "auto",
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="#3b5998"
+          width="24px"
+          height="24px"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style={styles.facebookIcon}
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path d="M22.675 0h-21.35C.592 0 0 .593 0 1.326v21.348C0 23.406.592 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.464.098 2.797.142v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.31h3.59l-.467 3.622h-3.123V24h6.116C23.406 24 24 23.406 24 22.674V1.326C24 .593 23.406 0 22.675 0z" />
-          </svg>
-          Follow
-        </a>
-      </footer>
+          <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.406.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.796.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.764v2.314h3.59l-.467 3.622h-3.123V24h6.116c.73 0 1.324-.593 1.324-1.326V1.326C24 .593 23.406 0 22.675 0z" />
+        </svg>
+        Follow me on Facebook
+      </a>
     </div>
   );
-  }
-    
+        }
+              
