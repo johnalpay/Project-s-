@@ -246,7 +246,7 @@ export default function Home() {
         </a>
       </footer>
 
-      {/* STICKER HERE */}
+      {/* STICKER */}
       <img
         src="/sticker.png"
         alt="Sticker"
@@ -302,14 +302,19 @@ export default function Home() {
 function FacebookIcon() {
   return (
     <svg
-      fill="currentColor"
-      height="18"
-      width="18"
       aria-hidden="true"
-      viewBox="0 0 24 24"
-      style={{ marginRight: 8 }}
+      focusable="false"
+      data-prefix="fab"
+      data-icon="facebook"
+      className="svg-inline--fa fa-facebook fa-w-16"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      width="20"
+      height="20"
+      style={{ marginRight: 8, verticalAlign: "middle", fill: "#1877F2" }}
     >
-      <path d="M22.675 0h-21.35C.6 0 0 .6 0 1.326v21.348C0 23.4.6 24 1.326 24h11.49v-9.294H9.691v-3.622h3.126V8.413c0-3.1 1.894-4.788 4.66-4.788 1.325 0 2.466.099 2.796.143v3.24l-1.92.001c-1.505 0-1.797.715-1.797 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116C23.4 24 24 23.4 24 22.674V1.326C24 .6 23.4 0 22.675 0z" />
+      <path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209 245v-173h-63v-72h63v-55.2c0-62.15 37-96.8 93.67-96.8 27.14 0 55.55 4.84 55.55 4.84v61h-31.28c-30.83 0-40.44 19.16-40.44 38.8V256h69l-11 72h-58v173c118.31-18.62 209-121.22 209-245z"></path>
     </svg>
   );
 }
@@ -321,7 +326,7 @@ const styles = {
     minHeight: "100vh",
     width: "100vw",
     maxWidth: "100vw",
-    padding: "12px 0",
+    padding: "12px 0", // <-- Removed left/right padding to fix white space on left
     boxSizing: "border-box",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     overflowX: "hidden",
@@ -329,34 +334,35 @@ const styles = {
   stickyHeader: {
     position: "sticky",
     top: 0,
-    backgroundColor: "#111",
-    zIndex: 999,
+    backgroundColor: "#222",
+    padding: "12px 24px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 20px",
-    borderBottom: "1px solid #333",
+    zIndex: 100,
+    borderRadius: 6,
+    boxShadow: "0 0 8px rgba(0,0,0,0.8)",
   },
   title: {
-    fontSize: 22,
-    margin: 0,
     fontWeight: "bold",
+    fontSize: 24,
+    margin: 0,
+    userSelect: "none",
   },
   nav: {
     display: "flex",
-    gap: 12,
+    gap: 8,
     alignItems: "center",
   },
   navButton: {
-    backgroundColor: "#ff5645",
-    color: "#fff",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: 6,
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: 14,
-    transition: "background-color 0.3s",
+    padding: "8px 16px",
+    backgroundColor: "#333",
+    border: "none",
+    borderRadius: 6,
+    color: "#eee",
+    fontWeight: "600",
+    transition: "background-color 0.25s ease",
   },
   userProfile: {
     display: "flex",
@@ -367,123 +373,117 @@ const styles = {
     borderRadius: "50%",
     width: 40,
     height: 40,
-    objectFit: "cover",
-    userSelect: "none",
   },
   welcomeText: {
-    fontWeight: "bold",
-    fontSize: 15,
+    fontWeight: "600",
   },
   dateTime: {
     marginTop: 16,
-    fontWeight: "600",
+    marginBottom: 16,
     fontSize: 14,
-    color: "#ddd",
     textAlign: "center",
     userSelect: "none",
+    color: "#ccc",
   },
   description: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 18,
     textAlign: "center",
-    marginTop: 20,
-  },
-  projectsContainer: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: 24,
-    marginTop: 18,
-  },
-  projectCard: {
-    backgroundColor: "#333",
-    borderRadius: 12,
-    padding: 16,
-    boxShadow: "0 8px 18px rgba(0,0,0,0.2)",
-    userSelect: "none",
-    transition: "all 0.3s ease",
-  },
-  projectName: {
-    margin: "0 0 8px 0",
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#ff4b45",
-  },
-  projectDesc: {
-    fontSize: 14,
-    color: "#ddd",
     marginBottom: 16,
   },
-  button: {
-    backgroundColor: "#ff4b45",
-    color: "#fff",
-    border: "none",
-    padding: "10px 20px",
+  projectsContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 24,
+    justifyContent: "center",
+  },
+  projectCard: {
+    backgroundColor: "#2c2c2c",
     borderRadius: 8,
-    cursor: "pointer",
-    fontWeight: "600",
-    fontSize: 14,
-    userSelect: "none",
+    padding: 24,
+    width: 300,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
     transition: "all 0.3s ease",
+    userSelect: "none",
+  },
+  projectName: {
+    marginTop: 0,
+    marginBottom: 8,
+    fontWeight: "700",
+  },
+  projectDesc: {
+    marginTop: 0,
+    marginBottom: 16,
+    color: "#bbb",
+  },
+  button: {
+    cursor: "pointer",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: 8,
+    backgroundColor: "#444",
+    color: "#eee",
+    fontWeight: "600",
+    transition: "all 0.25s ease",
   },
   form: {
-    backgroundColor: "#222",
-    padding: 24,
-    borderRadius: 12,
     maxWidth: 400,
     margin: "32px auto",
-    color: "#ddd",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.5)",
+    backgroundColor: "#2c2c2c",
+    padding: 24,
+    borderRadius: 8,
+    boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
+    color: "#eee",
+    userSelect: "none",
   },
   input: {
     width: "100%",
-    padding: "10px 14px",
+    padding: "12px 14px",
     marginBottom: 16,
+    borderRadius: 6,
+    border: "none",
+    outline: "none",
     fontSize: 16,
-    borderRadius: 8,
-    border: "1px solid #555",
-    backgroundColor: "#111",
-    color: "#eee",
   },
   message: {
-    color: "#ff6b6b",
-    marginBottom: 16,
-  },
-  spinner: {
-    display: "inline-block",
-    width: 16,
-    height: 16,
-    border: "2px solid #eee",
-    borderTop: "2px solid #ff4b45",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
+    marginBottom: 12,
+    color: "#ff5555",
+    fontWeight: "600",
   },
   linkButton: {
     background: "none",
     border: "none",
-    color: "#ff5645",
+    color: "#57aaff",
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: 14,
+    fontWeight: "600",
     padding: 0,
+    userSelect: "none",
   },
   footer: {
     marginTop: 48,
     textAlign: "center",
-    paddingBottom: 40,
   },
   followButton: {
     display: "inline-flex",
     alignItems: "center",
-    gap: 6,
-    backgroundColor: "#ff4b45",
+    gap: 8,
+    backgroundColor: "#1877F2",
     color: "#fff",
-    fontWeight: "bold",
-    padding: "10px 22px",
+    fontWeight: "700",
+    padding: "12px 24px",
     borderRadius: 12,
     textDecoration: "none",
-    fontSize: 14,
+    boxShadow: "0 8px 24px rgba(24, 119, 242, 0.4)",
     userSelect: "none",
     transition: "all 0.3s ease",
-    border: "1px solid #ff1e0e",
+  },
+  spinner: {
+    display: "inline-block",
+    width: 18,
+    height: 18,
+    border: "3px solid #eee",
+    borderTop: "3px solid #666",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
   },
 };
+    
