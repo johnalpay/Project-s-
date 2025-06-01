@@ -17,6 +17,11 @@ export default function Home() {
       url: "https://getnew-xi.vercel.app/",
       description: "Facebook Token Getter using Cookie Method",
     },
+    {
+      name: "Weather",
+      url: "https://weather-five-dun.vercel.app/",
+      description: "Check the latest Weather",
+    },
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
