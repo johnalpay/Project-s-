@@ -4,7 +4,7 @@ export default function Home() {
   const projects = [
     {
       name: "Lyrics",
-      url: "https://lyrics-wheat.vercel.app/",
+      url: "https://lyrics-liart.vercel.app/",
       description: "Lyrics Finder Website",
     },
     {
@@ -20,9 +20,10 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
-  const [view, setView] = useState("home");
+  const [view, setView] = useState("home"); // "home", "login", "signup"
   const [user, setUser] = useState(null);
 
+  // For form fields
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -34,6 +35,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    // Check localStorage for logged in user
     const savedUser = localStorage.getItem("loggedInUser");
     if (savedUser) setUser(savedUser);
   }, []);
@@ -47,6 +49,7 @@ export default function Home() {
 
   const formattedTime = dateTime.toLocaleTimeString();
 
+  // Signup handler
   async function handleSignup(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -75,6 +78,7 @@ export default function Home() {
     setLoading(false);
   }
 
+  // Login handler
   async function handleLogin(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -107,10 +111,12 @@ export default function Home() {
     setView("home");
   }
 
+  // Placeholder avatar URL (you can replace this with actual user avatars)
   const avatarUrl = "https://i.pravatar.cc/40?u=" + user;
 
   return (
     <main style={styles.container}>
+      {/* Sticky Header */}
       <header style={styles.stickyHeader}>
         <h1 style={styles.title}>My Projects</h1>
         <nav style={styles.nav}>
@@ -139,7 +145,12 @@ export default function Home() {
             </>
           ) : (
             <div style={styles.userProfile}>
-              <img src={avatarUrl} alt={`${user} avatar`} style={styles.avatar} draggable={false} />
+              <img
+                src={avatarUrl}
+                alt={`${user} avatar`}
+                style={styles.avatar}
+                draggable={false}
+              />
               <span style={styles.welcomeText}>Welcome, {user}!</span>
               <button style={styles.navButton} onClick={handleLogout} disabled={loading}>
                 Logout
@@ -156,9 +167,14 @@ export default function Home() {
       {view === "home" && (
         <>
           <p style={styles.description}>Here are the websites I have built.</p>
+
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
-              <div key={project.name} style={styles.projectCard} className="project-card">
+              <div
+                key={project.name}
+                style={styles.projectCard}
+                className="project-card"
+              >
                 <h2 style={styles.projectName}>{project.name}</h2>
                 <p style={styles.projectDesc}>{project.description}</p>
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
@@ -173,7 +189,10 @@ export default function Home() {
       )}
 
       {(view === "login" || view === "signup") && (
-        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
+        <form
+          onSubmit={view === "login" ? handleLogin : handleSignup}
+          style={styles.form}
+        >
           <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
           {message && <p style={styles.message}>{message}</p>}
           <input
@@ -195,7 +214,13 @@ export default function Home() {
             disabled={loading}
           />
           <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? <span style={styles.spinner} aria-label="loading"></span> : view === "login" ? "Login" : "Sign Up"}
+            {loading ? (
+              <span style={styles.spinner} aria-label="loading"></span>
+            ) : view === "login" ? (
+              "Login"
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <p style={{ marginTop: 12 }}>
             {view === "login" ? (
@@ -246,53 +271,37 @@ export default function Home() {
         </a>
       </footer>
 
-      {/* STICKER */}
-      <img
-        src="/sticker.png"
-        alt="Sticker"
-        style={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-          width: 80,
-          height: 80,
-          zIndex: 999,
-          borderRadius: "50%",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-          cursor: "pointer",
-        }}
-      />
-
       <style jsx>{`
         .project-card:hover {
           transform: translateY(-8px);
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 12px 24px rgba(0,0,0,0.5);
         }
+
         .visit-button:hover {
           background-color: #ff4b45;
-          box-shadow: 0 6px 15px rgba(255, 75, 69, 0.7);
+          box-shadow: 0 6px 15px rgba(255,75,69,0.7);
           transform: scale(1.05);
         }
+
         .visit-button:active {
           transform: scale(0.98);
         }
+
         .follow-button:hover {
-          background-color: #e94560;
+          background-color: #E94560;
           color: #fff;
           border-color: #b22222;
-          box-shadow: 0 6px 15px rgba(233, 69, 96, 0.7);
+          box-shadow: 0 6px 15px rgba(233,69,96,0.7);
           transform: scale(1.07);
         }
+
         .follow-button:active {
           transform: scale(0.95);
         }
+
         @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
         }
       `}</style>
     </main>
@@ -302,188 +311,216 @@ export default function Home() {
 function FacebookIcon() {
   return (
     <svg
-      aria-hidden="true"
-      focusable="false"
-      data-prefix="fab"
-      data-icon="facebook"
-      className="svg-inline--fa fa-facebook fa-w-16"
-      role="img"
+      style={{ marginRight: 8 }}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 512 512"
-      width="20"
       height="20"
-      style={{ marginRight: 8, verticalAlign: "middle", fill: "#1877F2" }}
+      viewBox="0 0 24 24"
+      width="20"
+      fill="currentColor"
+      aria-hidden="true"
     >
-      <path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209 245v-173h-63v-72h63v-55.2c0-62.15 37-96.8 93.67-96.8 27.14 0 55.55 4.84 55.55 4.84v61h-31.28c-30.83 0-40.44 19.16-40.44 38.8V256h69l-11 72h-58v173c118.31-18.62 209-121.22 209-245z"></path>
+      <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2c0-2 1-3 3-3h2v3h-2c-.5 0-1 .5-1 1v2h3l-1 3h-2v7A10 10 0 0 0 22 12z" />
     </svg>
   );
 }
 
 const styles = {
   container: {
+    maxWidth: 860,
+    margin: "0 auto",
+    padding: 20,
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     backgroundColor: "#1a1a1a",
     color: "#eee",
     minHeight: "100vh",
-    width: "100vw",
-    maxWidth: "100vw",
-    padding: "12px 0", // <-- Removed left/right padding to fix white space on left
-    boxSizing: "border-box",
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    overflowX: "hidden",
+    display: "flex",
+    flexDirection: "column",
   },
+
   stickyHeader: {
     position: "sticky",
     top: 0,
     backgroundColor: "#222",
-    padding: "12px 24px",
+    padding: "12px 20px",
+    borderRadius: "0 0 12px 12px",
+    zIndex: 100,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    zIndex: 100,
-    borderRadius: 6,
-    boxShadow: "0 0 8px rgba(0,0,0,0.8)",
+    boxShadow: "0 3px 8px rgba(0,0,0,0.8)",
   },
+
   title: {
-    fontWeight: "bold",
     fontSize: 24,
     margin: 0,
-    userSelect: "none",
   },
+
   nav: {
-    display: "flex",
-    gap: 8,
-    alignItems: "center",
-  },
-  navButton: {
-    cursor: "pointer",
-    padding: "8px 16px",
-    backgroundColor: "#333",
-    border: "none",
-    borderRadius: 6,
-    color: "#eee",
-    fontWeight: "600",
-    transition: "background-color 0.25s ease",
-  },
-  userProfile: {
     display: "flex",
     alignItems: "center",
     gap: 12,
   },
-  avatar: {
-    borderRadius: "50%",
-    width: 40,
-    height: 40,
+
+  navButton: {
+    backgroundColor: "#ff4b45",
+    border: "none",
+    borderRadius: 6,
+    padding: "6px 14px",
+    color: "#eee",
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    fontSize: 14,
   },
+
+  userProfile: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+  },
+
+  avatar: {
+    width: 36,
+    height: 36,
+    borderRadius: "50%",
+    objectFit: "cover",
+  },
+
   welcomeText: {
+    fontSize: 16,
     fontWeight: "600",
   },
+
   dateTime: {
-    marginTop: 16,
-    marginBottom: 16,
-    fontSize: 14,
+    marginTop: 12,
     textAlign: "center",
-    userSelect: "none",
-    color: "#ccc",
+    fontSize: 16,
+    opacity: 0.8,
   },
+
   description: {
+    marginTop: 24,
+    marginBottom: 20,
     fontSize: 18,
+    fontWeight: "500",
     textAlign: "center",
-    marginBottom: 16,
   },
+
   projectsContainer: {
     display: "flex",
+    gap: 20,
     flexWrap: "wrap",
-    gap: 24,
     justifyContent: "center",
   },
+
   projectCard: {
-    backgroundColor: "#2c2c2c",
-    borderRadius: 8,
-    padding: 24,
-    width: 300,
-    boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
-    transition: "all 0.3s ease",
+    backgroundColor: "#292929",
+    borderRadius: 12,
+    padding: 20,
+    width: 260,
+    boxShadow: "0 4px 10px rgba(0,0,0,0.6)",
+    cursor: "default",
     userSelect: "none",
+    transition: "all 0.25s ease",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
+
   projectName: {
-    marginTop: 0,
+    margin: 0,
     marginBottom: 8,
+    fontSize: 22,
     fontWeight: "700",
   },
+
   projectDesc: {
-    marginTop: 0,
-    marginBottom: 16,
-    color: "#bbb",
+    fontSize: 15,
+    marginBottom: 20,
+    opacity: 0.75,
   },
+
   button: {
-    cursor: "pointer",
-    padding: "10px 20px",
+    backgroundColor: "#ff4b45",
+    color: "#eee",
     border: "none",
     borderRadius: 8,
-    backgroundColor: "#444",
-    color: "#eee",
-    fontWeight: "600",
-    transition: "all 0.25s ease",
-  },
-  form: {
-    maxWidth: 400,
-    margin: "32px auto",
-    backgroundColor: "#2c2c2c",
-    padding: 24,
-    borderRadius: 8,
-    boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
-    color: "#eee",
+    padding: "10px 20px",
+    fontWeight: "700",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
     userSelect: "none",
+    fontSize: 15,
   },
+
+  form: {
+    backgroundColor: "#292929",
+    borderRadius: 12,
+    padding: 30,
+    maxWidth: 360,
+    margin: "24px auto 0 auto",
+    display: "flex",
+    flexDirection: "column",
+  },
+
   input: {
-    width: "100%",
-    padding: "12px 14px",
     marginBottom: 16,
+    padding: 10,
     borderRadius: 6,
     border: "none",
-    outline: "none",
     fontSize: 16,
-  },
-  message: {
-    marginBottom: 12,
-    color: "#ff5555",
     fontWeight: "600",
+    backgroundColor: "#1a1a1a",
+    color: "#eee",
   },
+
+  message: {
+    marginBottom: 16,
+    color: "#ff6666",
+    fontWeight: "700",
+  },
+
+  spinner: {
+    border: "3px solid #eee",
+    borderTop: "3px solid #ff4b45",
+    borderRadius: "50%",
+    width: 18,
+    height: 18,
+    animation: "spin 1s linear infinite",
+    display: "inline-block",
+  },
+
   linkButton: {
     background: "none",
     border: "none",
-    color: "#57aaff",
+    color: "#ff4b45",
     cursor: "pointer",
-    fontWeight: "600",
+    fontWeight: "700",
+    textDecoration: "underline",
+    fontSize: 14,
     padding: 0,
-    userSelect: "none",
   },
+
   footer: {
-    marginTop: 48,
+    marginTop: "auto",
+    paddingTop: 30,
     textAlign: "center",
   },
+
   followButton: {
     display: "inline-flex",
     alignItems: "center",
-    gap: 8,
-    backgroundColor: "#1877F2",
-    color: "#fff",
-    fontWeight: "700",
-    padding: "12px 24px",
+    gap: 6,
+    backgroundColor: "#ff4b45",
+    color: "#eee",
+    padding: "12px 28px",
     borderRadius: 12,
     textDecoration: "none",
-    boxShadow: "0 8px 24px rgba(24, 119, 242, 0.4)",
+    fontWeight: "bold",
+    fontSize: 16,
+    cursor: "pointer",
     userSelect: "none",
     transition: "all 0.3s ease",
-  },
-  spinner: {
-    display: "inline-block",
-    width: 18,
-    height: 18,
-    border: "3px solid #eee",
-    borderTop: "3px solid #666",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
   },
 };
     
