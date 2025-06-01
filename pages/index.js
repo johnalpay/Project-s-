@@ -326,16 +326,17 @@ function FacebookIcon() {
 
 const styles = {
   container: {
-    maxWidth: 860,
-    margin: "0 auto",
-    padding: 20,
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    backgroundColor: "#1a1a1a",
-    color: "#eee",
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-  },
+  width: "100vw",
+  height: "100vh",
+  padding: 0,
+  margin: 0,
+  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  backgroundColor: "#000",  // pure black background
+  color: "#eee",
+  display: "flex",
+  flexDirection: "column",
+  overflowX: "hidden",
+  }
 
   stickyHeader: {
     position: "sticky",
@@ -407,26 +408,23 @@ const styles = {
   },
 
   projectsContainer: {
-    display: "flex",
-    gap: 20,
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+  gap: "24px",
+  padding: "24px",
+  width: "100%",
+    }
+    
   projectCard: {
-    backgroundColor: "#292929",
-    borderRadius: 12,
-    padding: 20,
-    width: 260,
-    boxShadow: "0 4px 10px rgba(0,0,0,0.6)",
-    cursor: "default",
-    userSelect: "none",
-    transition: "all 0.25s ease",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-
+  backgroundColor: "#111",
+  padding: "20px",
+  borderRadius: "12px",
+  boxShadow: "0 4px 10px rgba(255, 255, 255, 0.05)",
+  transition: "all 0.3s ease",
+  textAlign: "center",
+  fontSize: "1.1rem",
+  }
+    
   projectName: {
     margin: 0,
     marginBottom: 8,
