@@ -21,7 +21,7 @@ export default function Home() {
 
   const [dateTime, setDateTime] = useState(new Date());
   const [view, setView] = useState("home");
-  const [user, setUser] = useState(null);
+  const [sessionUser, setSessionUser] = useState(null);
 
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
@@ -35,7 +35,7 @@ export default function Home() {
 
   useEffect(() => {
     const savedUser = localStorage.getItem("loggedInUser");
-    if (savedUser) setUser(savedUser);
+    if (savedUser) setSessionUser(savedUser);
   }, []);
 
   const formattedDate = dateTime.toLocaleDateString(undefined, {
@@ -90,7 +90,7 @@ export default function Home() {
 
     if (users[formUsername] && users[formUsername] === formPassword) {
       localStorage.setItem("loggedInUser", formUsername);
-      setUser(formUsername);
+      setSessionUser(formUsername);
       setMessage("");
       setFormUsername("");
       setFormPassword("");
@@ -103,18 +103,18 @@ export default function Home() {
 
   function handleLogout() {
     localStorage.removeItem("loggedInUser");
-    setUser(null);
+    setSessionUser(null);
     setView("home");
   }
 
-  const avatarUrl = "https://i.pravatar.cc/40?u=" + user;
+  const avatarUrl = "https://i.pravatar.cc/40?u=" + sessionUser;
 
   return (
     <main style={styles.container}>
       <header style={styles.stickyHeader}>
         <h1 style={styles.title}>My Projects</h1>
         <nav style={styles.nav}>
-          {!user ? (
+          {!sessionUser ? (
             <>
               <button
                 style={styles.navButton}
@@ -139,8 +139,13 @@ export default function Home() {
             </>
           ) : (
             <div style={styles.userProfile}>
-              <img src={avatarUrl} alt={`${user} avatar`} style={styles.avatar} draggable={false} />
-              <span style={styles.welcomeText}>Welcome, {user}!</span>
+              <img
+                src={avatarUrl}
+                alt={`${sessionUser} avatar`}
+                style={styles.avatar}
+                draggable={false}
+              />
+              <span style={styles.welcomeText}>Welcome, {sessionUser}!</span>
               <button style={styles.navButton} onClick={handleLogout} disabled={loading}>
                 Logout
               </button>
@@ -155,6 +160,11 @@ export default function Home() {
 
       {view === "home" && (
         <>
+          {sessionUser && (
+            <p style={{ textAlign: "center", marginBottom: 16 }}>
+              You are logged in as <strong>{sessionUser}</strong>.
+            </p>
+          )}
           <p style={styles.description}>Here are the websites I have built.</p>
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
@@ -195,7 +205,13 @@ export default function Home() {
             disabled={loading}
           />
           <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? <span style={styles.spinner} aria-label="loading"></span> : view === "login" ? "Login" : "Sign Up"}
+            {loading ? (
+              <span style={styles.spinner} aria-label="loading"></span>
+            ) : view === "login" ? (
+              "Login"
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <p style={{ marginTop: 12 }}>
             {view === "login" ? (
@@ -246,54 +262,21 @@ export default function Home() {
         </a>
       </footer>
 
+      {/* STICKER HERE */}
       <img
-  src="https://i.ibb.co/3Wf0jbK/dev-sticker.png"
-  alt="Sticker"
-  style={{
-    position: "fixed",
-    bottom: 20,
-    right: 20,
-    width: 80,
-    height: 80,
-    zIndex: 999,
-    borderRadius: "50%",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-    cursor: "pointer",
-  }}
-/>
-
-      <style jsx>{`
-        .project-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
-        }
-        .visit-button:hover {
-          background-color: #ff4b45;
-          box-shadow: 0 6px 15px rgba(255, 75, 69, 0.7);
-          transform: scale(1.05);
-        }
-        .visit-button:active {
-          transform: scale(0.98);
-        }
-        .follow-button:hover {
-          background-color: #e94560;
-          color: #fff;
-          border-color: #b22222;
-          box-shadow: 0 6px 15px rgba(233, 69, 96, 0.7);
-          transform: scale(1.07);
-        }
-        .follow-button:active {
-          transform: scale(0.95);
-        }
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
+        src="/sticker.png"
+        alt="Sticker"
+        style={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          width: 80,
+          height: 80,
+          zIndex: 999,
+          borderRadius: "50%",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+        }}
+      />
     </main>
   );
 }
@@ -301,27 +284,27 @@ export default function Home() {
 function FacebookIcon() {
   return (
     <svg
-      style={{ marginRight: 8 }}
-      xmlns="http://www.w3.org/2000/svg"
-      height="20"
+      fill="#1877F2"
+      height="18"
+      width="18"
       viewBox="0 0 24 24"
-      width="20"
-      fill="currentColor"
+      style={{ marginRight: 6, verticalAlign: "middle" }}
+      xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
+      focusable="false"
     >
-      <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2c0-2 1-3 3-3h2v3h-2c-.5 0-1 .5-1 1v2h3l-1 3h-2v7A10 10 0 0 0 22 12z" />
+      <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.406.593 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.66-4.788 1.325 0 2.466.099 2.797.143v3.24h-1.918c-1.504 0-1.796.715-1.796 1.764v2.313h3.59l-.467 3.622h-3.123V24h6.116c.73 0 1.324-.594 1.324-1.326V1.326C24 .593 23.406 0 22.675 0z" />
     </svg>
   );
 }
 
 const styles = {
   container: {
-    maxWidth: 860,
+    maxWidth: 800,
     margin: "0 auto",
     padding: 20,
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    backgroundColor: "#1a1a1a",
-    color: "#eee",
+    color: "#333",
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
@@ -329,132 +312,147 @@ const styles = {
   stickyHeader: {
     position: "sticky",
     top: 0,
-    backgroundColor: "#222",
-    padding: "12px 20px",
-    borderRadius: "0 0 12px 12px",
-    zIndex: 100,
+    backgroundColor: "#f8f9fa",
+    padding: "10px 0",
+    marginBottom: 24,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    boxShadow: "0 3px 8px rgba(0,0,0,0.8)",
+    zIndex: 100,
+    borderBottom: "1px solid #ddd",
   },
   title: {
+    fontWeight: "bold",
     fontSize: 24,
+    margin: 0,
   },
   nav: {
     display: "flex",
-    gap: 10,
+    gap: 12,
+    alignItems: "center",
   },
   navButton: {
-    backgroundColor: "#333",
-    border: "1px solid #555",
-    color: "#fff",
-    padding: "6px 12px",
-    borderRadius: 6,
+    backgroundColor: "#1877F2",
+    border: "none",
+    color: "white",
+    padding: "6px 14px",
+    borderRadius: 4,
     cursor: "pointer",
+    fontWeight: "600",
+    fontSize: 14,
+    userSelect: "none",
   },
   userProfile: {
     display: "flex",
     alignItems: "center",
-    gap: 10,
+    gap: 8,
   },
   avatar: {
-    width: 32,
-    height: 32,
+    width: 40,
+    height: 40,
     borderRadius: "50%",
   },
   welcomeText: {
-    fontSize: 14,
+    fontWeight: "600",
   },
   dateTime: {
     textAlign: "center",
-    margin: "16px 0",
+    marginBottom: 16,
     fontSize: 16,
-    fontWeight: "bold",
+    color: "#666",
   },
   description: {
     textAlign: "center",
+    marginBottom: 16,
     fontSize: 18,
-    marginBottom: 20,
   },
   projectsContainer: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 20,
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
   },
   projectCard: {
-    backgroundColor: "#2a2a2a",
-    padding: 20,
-    borderRadius: 12,
-    transition: "all 0.3s ease",
+    padding: 16,
+    borderRadius: 6,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    backgroundColor: "white",
   },
   projectName: {
+    margin: 0,
+    fontWeight: "bold",
     fontSize: 20,
-    marginBottom: 10,
   },
   projectDesc: {
-    fontSize: 14,
-    marginBottom: 10,
+    margin: "8px 0",
+    fontSize: 16,
+    color: "#555",
   },
   button: {
-    padding: "6px 14px",
-    backgroundColor: "#e94560",
-    color: "#fff",
+    backgroundColor: "#1877F2",
     border: "none",
-    borderRadius: 6,
+    color: "white",
+    padding: "8px 16px",
+    borderRadius: 4,
     cursor: "pointer",
-    transition: "all 0.3s ease",
+    fontWeight: "600",
+    fontSize: 14,
   },
   form: {
-    maxWidth: 360,
+    maxWidth: 400,
     margin: "0 auto",
+    padding: 20,
+    borderRadius: 6,
+    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+    backgroundColor: "white",
     display: "flex",
     flexDirection: "column",
     gap: 12,
   },
   input: {
     padding: 10,
-    borderRadius: 6,
-    border: "1px solid #444",
-    backgroundColor: "#2a2a2a",
-    color: "#fff",
+    fontSize: 16,
+    borderRadius: 4,
+    border: "1px solid #ccc",
   },
   message: {
-    color: "#f88",
-    fontWeight: "bold",
+    color: "red",
+    fontWeight: "600",
   },
   linkButton: {
     background: "none",
     border: "none",
-    color: "#4ea1f3",
-    textDecoration: "underline",
+    color: "#1877F2",
     cursor: "pointer",
+    fontWeight: "600",
+    textDecoration: "underline",
+    padding: 0,
+    fontSize: 14,
+  },
+  footer: {
+    marginTop: "auto",
+    textAlign: "center",
+    padding: 12,
+    borderTop: "1px solid #ddd",
+  },
+  followButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "#1877F2",
+    color: "white",
+    padding: "8px 14px",
+    borderRadius: 6,
+    textDecoration: "none",
+    fontWeight: "600",
   },
   spinner: {
     display: "inline-block",
     width: 16,
     height: 16,
-    border: "2px solid #fff",
-    borderTop: "2px solid transparent",
+    border: "2px solid rgba(255,255,255,0.6)",
+    borderTopColor: "white",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
   },
-  footer: {
-    marginTop: "auto",
-    paddingTop: 20,
-    textAlign: "center",
-  },
-  followButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    backgroundColor: "#2a2a2a",
-    color: "#fff",
-    padding: "8px 16px",
-    borderRadius: 8,
-    textDecoration: "none",
-    border: "1px solid #444",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-  },
 };
-    
+                  
