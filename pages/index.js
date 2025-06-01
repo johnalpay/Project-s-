@@ -331,7 +331,7 @@ function FacebookIcon() {
 
 const styles = {
   container: {
-    maxWidth: 700,
+    maxWidth: 100,
     margin: "0 auto",
     padding: 20,
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
