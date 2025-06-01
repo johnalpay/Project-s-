@@ -25,8 +25,10 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
-  const [view, setView] = useState("home");
+  const [view, setView] = useState("home"); // "home", "login", "signup"
   const [user, setUser] = useState(null);
+
+  // For form fields
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -38,6 +40,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    // Check localStorage for logged in user
     const savedUser = localStorage.getItem("loggedInUser");
     if (savedUser) setUser(savedUser);
   }, []);
@@ -51,6 +54,7 @@ export default function Home() {
 
   const formattedTime = dateTime.toLocaleTimeString();
 
+  // Signup handler
   async function handleSignup(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -60,6 +64,7 @@ export default function Home() {
 
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1000));
+
     const usersJSON = localStorage.getItem("users");
     const users = usersJSON ? JSON.parse(usersJSON) : {};
 
@@ -78,6 +83,7 @@ export default function Home() {
     setLoading(false);
   }
 
+  // Login handler
   async function handleLogin(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -87,10 +93,11 @@ export default function Home() {
 
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1000));
+
     const usersJSON = localStorage.getItem("users");
     const users = usersJSON ? JSON.parse(usersJSON) : {};
 
-    if (users[formUsername] === formPassword) {
+    if (users[formUsername] && users[formUsername] === formPassword) {
       localStorage.setItem("loggedInUser", formUsername);
       setUser(formUsername);
       setMessage("");
@@ -109,23 +116,50 @@ export default function Home() {
     setView("home");
   }
 
+  // Placeholder avatar URL (you can replace this with actual user avatars)
   const avatarUrl = "https://i.pravatar.cc/40?u=" + user;
 
   return (
     <main style={styles.container}>
+      {/* Sticky Header */}
       <header style={styles.stickyHeader}>
         <h1 style={styles.title}>My Projects</h1>
         <nav style={styles.nav}>
           {!user ? (
             <>
-              <button style={styles.navButton} onClick={() => { setView("login"); setMessage(""); }} disabled={loading}>Login</button>
-              <button style={styles.navButton} onClick={() => { setView("signup"); setMessage(""); }} disabled={loading}>Sign Up</button>
+              <button
+                style={styles.navButton}
+                onClick={() => {
+                  setView("login");
+                  setMessage("");
+                }}
+                disabled={loading}
+              >
+                Login
+              </button>
+              <button
+                style={styles.navButton}
+                onClick={() => {
+                  setView("signup");
+                  setMessage("");
+                }}
+                disabled={loading}
+              >
+                Sign Up
+              </button>
             </>
           ) : (
             <div style={styles.userProfile}>
-              <img src={avatarUrl} alt="avatar" style={styles.avatar} draggable={false} />
+              <img
+                src={avatarUrl}
+                alt={`${user} avatar`}
+                style={styles.avatar}
+                draggable={false}
+              />
               <span style={styles.welcomeText}>Welcome, {user}!</span>
-              <button style={styles.navButton} onClick={handleLogout} disabled={loading}>Logout</button>
+              <button style={styles.navButton} onClick={handleLogout} disabled={loading}>
+                Logout
+              </button>
             </div>
           )}
         </nav>
@@ -138,13 +172,20 @@ export default function Home() {
       {view === "home" && (
         <>
           <p style={styles.description}>Here are the websites I have built.</p>
+
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
-              <div key={project.name} style={styles.projectCard} className="project-card">
+              <div
+                key={project.name}
+                style={styles.projectCard}
+                className="project-card"
+              >
                 <h2 style={styles.projectName}>{project.name}</h2>
                 <p style={styles.projectDesc}>{project.description}</p>
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
-                  <button style={styles.button} className="visit-button" disabled={loading}>Visit</button>
+                  <button style={styles.button} className="visit-button" disabled={loading}>
+                    Visit
+                  </button>
                 </a>
               </div>
             ))}
@@ -153,49 +194,119 @@ export default function Home() {
       )}
 
       {(view === "login" || view === "signup") && (
-        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
+        <form
+          onSubmit={view === "login" ? handleLogin : handleSignup}
+          style={styles.form}
+        >
           <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
           {message && <p style={styles.message}>{message}</p>}
-          <input type="text" placeholder="Username" value={formUsername} onChange={(e) => setFormUsername(e.target.value)} style={styles.input} disabled={loading} />
-          <input type="password" placeholder="Password" value={formPassword} onChange={(e) => setFormPassword(e.target.value)} style={styles.input} disabled={loading} />
+          <input
+            type="text"
+            placeholder="Username"
+            value={formUsername}
+            onChange={(e) => setFormUsername(e.target.value)}
+            style={styles.input}
+            autoComplete="username"
+            disabled={loading}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={formPassword}
+            onChange={(e) => setFormPassword(e.target.value)}
+            style={styles.input}
+            autoComplete={view === "login" ? "current-password" : "new-password"}
+            disabled={loading}
+          />
           <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? "Loading..." : view === "login" ? "Login" : "Sign Up"}
+            {loading ? (
+              <span style={styles.spinner} aria-label="loading"></span>
+            ) : view === "login" ? (
+              "Login"
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <p style={{ marginTop: 12 }}>
             {view === "login" ? (
-              <>Don't have an account? <button type="button" style={styles.linkButton} onClick={() => { setView("signup"); setMessage(""); }} disabled={loading}>Sign Up</button></>
+              <>
+                Don't have an account?{" "}
+                <button
+                  type="button"
+                  style={styles.linkButton}
+                  onClick={() => {
+                    setView("signup");
+                    setMessage("");
+                  }}
+                  disabled={loading}
+                >
+                  Sign Up
+                </button>
+              </>
             ) : (
-              <>Already have an account? <button type="button" style={styles.linkButton} onClick={() => { setView("login"); setMessage(""); }} disabled={loading}>Login</button></>
+              <>
+                Already have an account?{" "}
+                <button
+                  type="button"
+                  style={styles.linkButton}
+                  onClick={() => {
+                    setView("login");
+                    setMessage("");
+                  }}
+                  disabled={loading}
+                >
+                  Login
+                </button>
+              </>
             )}
           </p>
         </form>
       )}
 
       <footer style={styles.footer}>
-        <a href="https://www.facebook.com/profile.php?id=61576992292379" target="_blank" rel="noopener noreferrer" style={styles.followButton} className="follow-button">
+        <a
+          href="https://www.facebook.com/profile.php?id=61576992292379"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.followButton}
+          aria-label="Follow on Facebook"
+          className="follow-button"
+        >
           <FacebookIcon /> Follow me on Facebook
         </a>
       </footer>
 
       <style jsx>{`
-        html, body {
-          margin: 0;
-          padding: 0;
-        }
-
         .project-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 12px 24px rgba(255, 0, 0, 0.4);
+          transform: translateY(-8px);
+          box-shadow: 0 12px 24px rgba(255, 0, 0, 0.6);
         }
 
         .visit-button:hover {
           background-color: #b22222;
           box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
+          transform: scale(1.05);
+        }
+
+        .visit-button:active {
+          transform: scale(0.98);
         }
 
         .follow-button:hover {
           background-color: #b22222;
           color: #fff;
+          border-color: #7a1212;
+          box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
+          transform: scale(1.07);
+        }
+
+        .follow-button:active {
+          transform: scale(0.95);
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
         }
       `}</style>
     </main>
@@ -204,151 +315,231 @@ export default function Home() {
 
 function FacebookIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 8 }} width="20" height="20" fill="#fff" viewBox="0 0 24 24">
-      <path d="M22.675 0h-21.35C.596 0 0 .596 0 1.333v21.333C0 23.404.596 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.41c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.098 2.797.142v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.596 1.325-1.334V1.333C24 .596 23.404 0 22.675 0z"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ marginRight: 8 }}
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="#fff"
+      aria-hidden="true"
+    >
+      <path d="M22.675 0h-21.35C.596 0 0 .596 0 1.333v21.333C0 23.404.596 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.41c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.098 2.797.142v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.596 1.325-1.334V1.333C24 .596 23.404 0 22.675 0z" />
     </svg>
   );
 }
 
 const styles = {
   container: {
-    margin: 0,
-    padding: 0,
+    maxWidth: 700,
+    margin: "0 auto",
+    padding: 20,
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    color: "#eee",
     minHeight: "100vh",
-    width: "100%",
-    backgroundColor: "#111",
-    color: "#fff",
-    fontFamily: "'Segoe UI', sans-serif",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+
+    // Angasin style: black background with realistic red gradients on sides
+    backgroundColor: "#000",
+
+    backgroundImage: `
+      linear-gradient(to right, 
+        #8B0000 0%, 
+        transparent 50%, 
+        transparent 50%, 
+        #8B0000 100%)`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "60px 100%",
+    backgroundPosition: "left center, right center",
   },
+
   stickyHeader: {
-    width: "100%",
-    backgroundColor: "#222",
-    padding: "1rem",
+    position: "sticky",
+    top: 0,
+    backgroundColor: "#111",
+    zIndex: 999,
+    padding: 12,
+    borderRadius: 6,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    position: "sticky",
-    top: 0,
-    zIndex: 10,
+    boxShadow: "0 4px 10px rgba(255, 0, 0, 0.5)",
   },
+
   title: {
-    margin: 0,
-    fontSize: "1.5rem",
+    fontWeight: "bold",
+    fontSize: 22,
+    color: "#ff4444",
+    userSelect: "none",
   },
+
   nav: {
     display: "flex",
-    gap: 10,
+    gap: 12,
+    alignItems: "center",
   },
+
   navButton: {
-    padding: "6px 12px",
-    backgroundColor: "#444",
+    backgroundColor: "#8B0000",
     color: "#fff",
     border: "none",
+    padding: "8px 14px",
     borderRadius: 4,
     cursor: "pointer",
+    fontWeight: "600",
+    transition: "background-color 0.3s ease",
   },
+
   userProfile: {
     display: "flex",
     alignItems: "center",
-    gap: 8,
+    gap: 10,
   },
+
   avatar: {
+    width: 40,
+    height: 40,
     borderRadius: "50%",
-    width: 32,
-    height: 32,
+    border: "2px solid #8B0000",
+    objectFit: "cover",
   },
+
   welcomeText: {
-    fontSize: 14,
+    color: "#ff4444",
+    fontWeight: "600",
+    userSelect: "none",
   },
+
   dateTime: {
-    margin: "1rem 0",
-    fontSize: 16,
+    marginTop: 8,
+    fontWeight: "600",
+    color: "#ff4444",
+    textAlign: "center",
+    fontSize: 14,
+    userSelect: "none",
   },
+
   description: {
-    marginBottom: 16,
+    marginTop: 12,
+    fontWeight: "600",
+    fontSize: 17,
+    color: "#ccc",
     textAlign: "center",
   },
+
   projectsContainer: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: 16,
-    padding: "1rem",
+    marginTop: 20,
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 20,
   },
+
   projectCard: {
-    backgroundColor: "#222",
+    backgroundColor: "#1a0000",
+    padding: 18,
     borderRadius: 8,
-    padding: 20,
-    width: 260,
-    textAlign: "center",
-    transition: "all 0.3s ease",
+    boxShadow: "0 6px 16px rgba(139,0,0,0.4)",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease",
   },
+
   projectName: {
-    fontSize: 18,
-    marginBottom: 8,
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#ff4444",
+    marginBottom: 6,
+    userSelect: "none",
   },
+
   projectDesc: {
     fontSize: 14,
+    color: "#ddd",
     marginBottom: 12,
+    minHeight: 38,
   },
+
   button: {
-    padding: "8px 16px",
-    backgroundColor: "#d33",
-    color: "#fff",
+    backgroundColor: "#a52a2a",
     border: "none",
-    borderRadius: 4,
+    color: "#fff",
+    padding: "10px 14px",
+    borderRadius: 5,
+    fontWeight: "600",
     cursor: "pointer",
-    transition: "all 0.2s ease",
+    userSelect: "none",
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease",
   },
+
   form: {
-    backgroundColor: "#222",
-    padding: 20,
+    marginTop: 30,
+    maxWidth: 400,
+    marginLeft: "auto",
+    marginRight: "auto",
+    backgroundColor: "#220000",
+    padding: 24,
     borderRadius: 8,
-    width: "100%",
-    maxWidth: 320,
+    boxShadow: "0 8px 24px rgba(178, 34, 34, 0.7)",
     display: "flex",
     flexDirection: "column",
-    gap: 10,
-    marginTop: 30,
   },
+
   input: {
-    padding: 10,
-    borderRadius: 4,
-    border: "1px solid #555",
-    backgroundColor: "#111",
+    marginBottom: 16,
+    padding: 12,
+    fontSize: 16,
+    borderRadius: 6,
+    border: "1px solid #8B0000",
+    backgroundColor: "#330000",
     color: "#fff",
+    outlineColor: "#ff4444",
   },
+
   message: {
-    color: "tomato",
-    fontSize: 14,
-    textAlign: "center",
+    color: "#ff6666",
+    marginBottom: 12,
+    fontWeight: "600",
+    userSelect: "none",
   },
+
+  spinner: {
+    display: "inline-block",
+    width: 16,
+    height: 16,
+    border: "3px solid #fff",
+    borderTop: "3px solid transparent",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+  },
+
   linkButton: {
-    color: "#f66",
     background: "none",
     border: "none",
+    color: "#ff4444",
     cursor: "pointer",
+    fontWeight: "600",
+    padding: 0,
   },
+
   footer: {
     marginTop: "auto",
-    padding: "1rem",
-    backgroundColor: "#111",
-    width: "100%",
+    padding: 18,
     textAlign: "center",
   },
+
   followButton: {
+    backgroundColor: "#8B0000",
+    color: "#fff",
+    padding: "10px 22px",
+    borderRadius: 8,
+    fontWeight: "700",
+    fontSize: 16,
+    userSelect: "none",
     display: "inline-flex",
     alignItems: "center",
-    backgroundColor: "#444",
-    color: "#fff",
-    padding: "8px 14px",
-    borderRadius: 6,
     textDecoration: "none",
-    border: "1px solid #333",
+    border: "2px solid #5c0000",
+    transition: "all 0.3s ease",
     cursor: "pointer",
   },
 };
-            
+    
