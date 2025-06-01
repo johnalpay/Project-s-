@@ -333,7 +333,7 @@ const styles = {
   container: {
     maxWidth: 860,
     margin: "0 auto",
-    padding: 10,
+    padding: 20,
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     color: "#eee",
     minHeight: "100vh",
@@ -360,7 +360,7 @@ const styles = {
     backgroundColor: "#111",
     zIndex: 999,
     padding: 12,
-    borderRadius: 6,
+    borderRadius: 3,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
