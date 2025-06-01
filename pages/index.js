@@ -321,7 +321,7 @@ const styles = {
     minHeight: "100vh",
     width: "100vw",
     maxWidth: "100vw",
-    padding: "12px 24px",
+    padding: "12px 0",
     boxSizing: "border-box",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     overflowX: "hidden",
