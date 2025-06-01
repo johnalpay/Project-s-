@@ -246,22 +246,21 @@ export default function Home() {
         </a>
       </footer>
 
-      {/* STICKER HERE */}
       <img
-        src="/sticker.png"
-        alt="Sticker"
-        style={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-          width: 80,
-          height: 80,
-          zIndex: 999,
-          borderRadius: "50%",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-          cursor: "pointer",
-        }}
-      />
+  src="https://i.ibb.co/3Wf0jbK/dev-sticker.png"
+  alt="Sticker"
+  style={{
+    position: "fixed",
+    bottom: 20,
+    right: 20,
+    width: 80,
+    height: 80,
+    zIndex: 999,
+    borderRadius: "50%",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+    cursor: "pointer",
+  }}
+/>
 
       <style jsx>{`
         .project-card:hover {
