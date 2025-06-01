@@ -279,12 +279,12 @@ export default function Home() {
       <style jsx>{`
         .project-card:hover {
           transform: translateY(-8px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+          box-shadow: 0 12px 24px rgba(255, 0, 0, 0.6);
         }
 
         .visit-button:hover {
-          background-color: #ff4b45;
-          box-shadow: 0 6px 15px rgba(255,75,69,0.7);
+          background-color: #b22222;
+          box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
           transform: scale(1.05);
         }
 
@@ -293,10 +293,10 @@ export default function Home() {
         }
 
         .follow-button:hover {
-          background-color: #E94560;
+          background-color: #b22222;
           color: #fff;
-          border-color: #b22222;
-          box-shadow: 0 6px 15px rgba(233,69,96,0.7);
+          border-color: #7a1212;
+          box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
           transform: scale(1.07);
         }
 
@@ -316,15 +316,15 @@ export default function Home() {
 function FacebookIcon() {
   return (
     <svg
-      style={{ marginRight: 8 }}
       xmlns="http://www.w3.org/2000/svg"
+      style={{ marginRight: 8 }}
+      width="20"
       height="20"
       viewBox="0 0 24 24"
-      width="20"
-      fill="currentColor"
+      fill="#fff"
       aria-hidden="true"
     >
-      <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2c0-2 1-3 3-3h2v3h-2c-.5 0-1 .5-1 1v2h3l-1 3h-2v7A10 10 0 0 0 22 12z" />
+      <path d="M22.675 0h-21.35C.596 0 0 .596 0 1.333v21.333C0 23.404.596 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.41c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.098 2.797.142v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.596 1.325-1.334V1.333C24 .596 23.404 0 22.675 0z" />
     </svg>
   );
 }
@@ -335,47 +335,60 @@ const styles = {
     margin: "0 auto",
     padding: 20,
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    backgroundColor: "#1a1a1a",
     color: "#eee",
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
+
+    // Angasin style: black background with realistic red gradients on sides
+    backgroundColor: "#000",
+
+    backgroundImage: `
+      linear-gradient(to right, 
+        #8B0000 0%, 
+        transparent 50%, 
+        transparent 50%, 
+        #8B0000 100%)`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "60px 100%",
+    backgroundPosition: "left center, right center",
   },
 
   stickyHeader: {
     position: "sticky",
     top: 0,
-    backgroundColor: "#222",
-    padding: "12px 20px",
-    borderRadius: "0 0 12px 12px",
-    zIndex: 100,
+    backgroundColor: "#111",
+    zIndex: 999,
+    padding: 12,
+    borderRadius: 6,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    boxShadow: "0 3px 8px rgba(0,0,0,0.8)",
+    boxShadow: "0 4px 10px rgba(255, 0, 0, 0.5)",
   },
 
   title: {
-    fontSize: 24,
-    margin: 0,
+    fontWeight: "bold",
+    fontSize: 22,
+    color: "#ff4444",
+    userSelect: "none",
   },
 
   nav: {
     display: "flex",
-    alignItems: "center",
     gap: 12,
+    alignItems: "center",
   },
 
   navButton: {
-    backgroundColor: "#ff4b45",
+    backgroundColor: "#8B0000",
+    color: "#fff",
     border: "none",
-    borderRadius: 6,
-    padding: "6px 14px",
-    color: "#eee",
-    fontWeight: "bold",
+    padding: "8px 14px",
+    borderRadius: 4,
     cursor: "pointer",
-    transition: "all 0.3s ease",
-    fontSize: 14,
+    fontWeight: "600",
+    transition: "background-color 0.3s ease",
   },
 
   userProfile: {
@@ -385,147 +398,147 @@ const styles = {
   },
 
   avatar: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     borderRadius: "50%",
+    border: "2px solid #8B0000",
     objectFit: "cover",
   },
 
   welcomeText: {
-    fontSize: 16,
+    color: "#ff4444",
     fontWeight: "600",
+    userSelect: "none",
   },
 
   dateTime: {
-    marginTop: 12,
+    marginTop: 8,
+    fontWeight: "600",
+    color: "#ff4444",
     textAlign: "center",
-    fontSize: 16,
-    opacity: 0.8,
+    fontSize: 14,
+    userSelect: "none",
   },
 
   description: {
-    marginTop: 24,
-    marginBottom: 20,
-    fontSize: 18,
-    fontWeight: "500",
+    marginTop: 12,
+    fontWeight: "600",
+    fontSize: 17,
+    color: "#ccc",
     textAlign: "center",
   },
 
   projectsContainer: {
-    display: "flex",
+    marginTop: 20,
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
     gap: 20,
-    flexWrap: "wrap",
-    justifyContent: "center",
   },
 
   projectCard: {
-    backgroundColor: "#292929",
-    borderRadius: 12,
-    padding: 20,
-    width: 260,
-    boxShadow: "0 4px 10px rgba(0,0,0,0.6)",
-    cursor: "default",
-    userSelect: "none",
-    transition: "all 0.25s ease",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    backgroundColor: "#1a0000",
+    padding: 18,
+    borderRadius: 8,
+    boxShadow: "0 6px 16px rgba(139,0,0,0.4)",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease",
   },
 
   projectName: {
-    margin: 0,
-    marginBottom: 8,
-    fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#ff4444",
+    marginBottom: 6,
+    userSelect: "none",
   },
 
   projectDesc: {
-    fontSize: 15,
-    marginBottom: 20,
-    opacity: 0.75,
+    fontSize: 14,
+    color: "#ddd",
+    marginBottom: 12,
+    minHeight: 38,
   },
 
   button: {
-    backgroundColor: "#ff4b45",
-    color: "#eee",
+    backgroundColor: "#a52a2a",
     border: "none",
-    borderRadius: 8,
-    padding: "10px 20px",
-    fontWeight: "700",
+    color: "#fff",
+    padding: "10px 14px",
+    borderRadius: 5,
+    fontWeight: "600",
     cursor: "pointer",
-    transition: "all 0.3s ease",
     userSelect: "none",
-    fontSize: 15,
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease",
   },
 
   form: {
-    backgroundColor: "#292929",
-    borderRadius: 12,
-    padding: 30,
-    maxWidth: 360,
-    margin: "24px auto 0 auto",
+    marginTop: 30,
+    maxWidth: 400,
+    marginLeft: "auto",
+    marginRight: "auto",
+    backgroundColor: "#220000",
+    padding: 24,
+    borderRadius: 8,
+    boxShadow: "0 8px 24px rgba(178, 34, 34, 0.7)",
     display: "flex",
     flexDirection: "column",
   },
 
   input: {
     marginBottom: 16,
-    padding: 10,
-    borderRadius: 6,
-    border: "none",
+    padding: 12,
     fontSize: 16,
-    fontWeight: "600",
-    backgroundColor: "#1a1a1a",
-    color: "#eee",
+    borderRadius: 6,
+    border: "1px solid #8B0000",
+    backgroundColor: "#330000",
+    color: "#fff",
+    outlineColor: "#ff4444",
   },
 
   message: {
-    marginBottom: 16,
     color: "#ff6666",
-    fontWeight: "700",
+    marginBottom: 12,
+    fontWeight: "600",
+    userSelect: "none",
   },
 
   spinner: {
-    border: "3px solid #eee",
-    borderTop: "3px solid #ff4b45",
-    borderRadius: "50%",
-    width: 18,
-    height: 18,
-    animation: "spin 1s linear infinite",
     display: "inline-block",
+    width: 16,
+    height: 16,
+    border: "3px solid #fff",
+    borderTop: "3px solid transparent",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
   },
 
   linkButton: {
     background: "none",
     border: "none",
-    color: "#ff4b45",
+    color: "#ff4444",
     cursor: "pointer",
-    fontWeight: "700",
-    textDecoration: "underline",
-    fontSize: 14,
+    fontWeight: "600",
     padding: 0,
   },
 
   footer: {
     marginTop: "auto",
-    paddingTop: 30,
+    padding: 18,
     textAlign: "center",
   },
 
   followButton: {
+    backgroundColor: "#8B0000",
+    color: "#fff",
+    padding: "10px 22px",
+    borderRadius: 8,
+    fontWeight: "700",
+    fontSize: 16,
+    userSelect: "none",
     display: "inline-flex",
     alignItems: "center",
-    gap: 6,
-    backgroundColor: "#ff4b45",
-    color: "#eee",
-    padding: "12px 28px",
-    borderRadius: 12,
     textDecoration: "none",
-    fontWeight: "bold",
-    fontSize: 16,
-    cursor: "pointer",
-    userSelect: "none",
+    border: "2px solid #5c0000",
     transition: "all 0.3s ease",
+    cursor: "pointer",
   },
 };
-    
