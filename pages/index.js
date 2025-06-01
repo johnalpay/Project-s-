@@ -4,7 +4,7 @@ export default function Home() {
   const projects = [
     {
       name: "Lyrics",
-      url: "https://lyrics-liart.vercel.app/",
+      url: "https://lyrics-wheat.vercel.app/",
       description: "Lyrics Finder Website",
     },
     {
