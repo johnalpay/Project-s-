@@ -20,9 +20,10 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
-  const [view, setView] = useState("home");
+  const [view, setView] = useState("home"); // "home", "login", "signup"
   const [user, setUser] = useState(null);
 
+  // For form fields
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -34,6 +35,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    // Check localStorage for logged in user
     const savedUser = localStorage.getItem("loggedInUser");
     if (savedUser) setUser(savedUser);
   }, []);
@@ -47,6 +49,7 @@ export default function Home() {
 
   const formattedTime = dateTime.toLocaleTimeString();
 
+  // Signup handler
   async function handleSignup(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -75,6 +78,7 @@ export default function Home() {
     setLoading(false);
   }
 
+  // Login handler
   async function handleLogin(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -107,10 +111,12 @@ export default function Home() {
     setView("home");
   }
 
+  // Placeholder avatar URL (you can replace this with actual user avatars)
   const avatarUrl = "https://i.pravatar.cc/40?u=" + user;
 
   return (
     <main style={styles.container}>
+      {/* Sticky Header */}
       <header style={styles.stickyHeader}>
         <h1 style={styles.title}>My Projects</h1>
         <nav style={styles.nav}>
@@ -139,7 +145,12 @@ export default function Home() {
             </>
           ) : (
             <div style={styles.userProfile}>
-              <img src={avatarUrl} alt={`${user} avatar`} style={styles.avatar} draggable={false} />
+              <img
+                src={avatarUrl}
+                alt={`${user} avatar`}
+                style={styles.avatar}
+                draggable={false}
+              />
               <span style={styles.welcomeText}>Welcome, {user}!</span>
               <button style={styles.navButton} onClick={handleLogout} disabled={loading}>
                 Logout
@@ -156,9 +167,14 @@ export default function Home() {
       {view === "home" && (
         <>
           <p style={styles.description}>Here are the websites I have built.</p>
+
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
-              <div key={project.name} style={styles.projectCard} className="project-card">
+              <div
+                key={project.name}
+                style={styles.projectCard}
+                className="project-card"
+              >
                 <h2 style={styles.projectName}>{project.name}</h2>
                 <p style={styles.projectDesc}>{project.description}</p>
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
@@ -173,7 +189,10 @@ export default function Home() {
       )}
 
       {(view === "login" || view === "signup") && (
-        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
+        <form
+          onSubmit={view === "login" ? handleLogin : handleSignup}
+          style={styles.form}
+        >
           <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
           {message && <p style={styles.message}>{message}</p>}
           <input
@@ -195,7 +214,13 @@ export default function Home() {
             disabled={loading}
           />
           <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? <span style={styles.spinner} aria-label="loading"></span> : view === "login" ? "Login" : "Sign Up"}
+            {loading ? (
+              <span style={styles.spinner} aria-label="loading"></span>
+            ) : view === "login" ? (
+              "Login"
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <p style={{ marginTop: 12 }}>
             {view === "login" ? (
@@ -246,53 +271,37 @@ export default function Home() {
         </a>
       </footer>
 
-      {/* STICKER HERE */}
-      <img
-        src="/sticker.png"
-        alt="Sticker"
-        style={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-          width: 80,
-          height: 80,
-          zIndex: 999,
-          borderRadius: "50%",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-          cursor: "pointer",
-        }}
-      />
-
       <style jsx>{`
         .project-card:hover {
           transform: translateY(-8px);
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 12px 24px rgba(0,0,0,0.5);
         }
+
         .visit-button:hover {
           background-color: #ff4b45;
-          box-shadow: 0 6px 15px rgba(255, 75, 69, 0.7);
+          box-shadow: 0 6px 15px rgba(255,75,69,0.7);
           transform: scale(1.05);
         }
+
         .visit-button:active {
           transform: scale(0.98);
         }
+
         .follow-button:hover {
-          background-color: #e94560;
+          background-color: #E94560;
           color: #fff;
           border-color: #b22222;
-          box-shadow: 0 6px 15px rgba(233, 69, 96, 0.7);
+          box-shadow: 0 6px 15px rgba(233,69,96,0.7);
           transform: scale(1.07);
         }
+
         .follow-button:active {
           transform: scale(0.95);
         }
+
         @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
         }
       `}</style>
     </main>
@@ -327,6 +336,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
   },
+
   stickyHeader: {
     position: "sticky",
     top: 0,
@@ -339,123 +349,178 @@ const styles = {
     alignItems: "center",
     boxShadow: "0 3px 8px rgba(0,0,0,0.8)",
   },
+
   title: {
     fontSize: 24,
+    margin: 0,
   },
+
   nav: {
     display: "flex",
-    gap: 10,
+    alignItems: "center",
+    gap: 12,
   },
+
   navButton: {
-    backgroundColor: "#333",
-    border: "1px solid #555",
-    color: "#fff",
-    padding: "6px 12px",
+    backgroundColor: "#ff4b45",
+    border: "none",
     borderRadius: 6,
+    padding: "6px 14px",
+    color: "#eee",
+    fontWeight: "bold",
     cursor: "pointer",
+    transition: "all 0.3s ease",
+    fontSize: 14,
   },
+
   userProfile: {
     display: "flex",
     alignItems: "center",
     gap: 10,
   },
+
   avatar: {
-    width: 32,
-    height: 32,
+    width: 36,
+    height: 36,
     borderRadius: "50%",
+    objectFit: "cover",
   },
+
   welcomeText: {
-    fontSize: 14,
-  },
-  dateTime: {
-    textAlign: "center",
-    margin: "16px 0",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
-  description: {
+
+  dateTime: {
+    marginTop: 12,
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 16,
+    opacity: 0.8,
+  },
+
+  description: {
+    marginTop: 24,
     marginBottom: 20,
+    fontSize: 18,
+    fontWeight: "500",
+    textAlign: "center",
   },
+
   projectsContainer: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    display: "flex",
     gap: 20,
+    flexWrap: "wrap",
+    justifyContent: "center",
   },
+
   projectCard: {
-    backgroundColor: "#2a2a2a",
-    padding: 20,
+    backgroundColor: "#292929",
     borderRadius: 12,
-    transition: "all 0.3s ease",
-  },
-  projectName: {
-    fontSize: 20,
-    marginBottom: 10,
-  },
-  projectDesc: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  button: {
-    padding: "6px 14px",
-    backgroundColor: "#e94560",
-    color: "#fff",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-  },
-  form: {
-    maxWidth: 360,
-    margin: "0 auto",
+    padding: 20,
+    width: 260,
+    boxShadow: "0 4px 10px rgba(0,0,0,0.6)",
+    cursor: "default",
+    userSelect: "none",
+    transition: "all 0.25s ease",
     display: "flex",
     flexDirection: "column",
-    gap: 12,
+    justifyContent: "space-between",
   },
+
+  projectName: {
+    margin: 0,
+    marginBottom: 8,
+    fontSize: 22,
+    fontWeight: "700",
+  },
+
+  projectDesc: {
+    fontSize: 15,
+    marginBottom: 20,
+    opacity: 0.75,
+  },
+
+  button: {
+    backgroundColor: "#ff4b45",
+    color: "#eee",
+    border: "none",
+    borderRadius: 8,
+    padding: "10px 20px",
+    fontWeight: "700",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    userSelect: "none",
+    fontSize: 15,
+  },
+
+  form: {
+    backgroundColor: "#292929",
+    borderRadius: 12,
+    padding: 30,
+    maxWidth: 360,
+    margin: "24px auto 0 auto",
+    display: "flex",
+    flexDirection: "column",
+  },
+
   input: {
+    marginBottom: 16,
     padding: 10,
     borderRadius: 6,
-    border: "1px solid #444",
-    backgroundColor: "#2a2a2a",
-    color: "#fff",
+    border: "none",
+    fontSize: 16,
+    fontWeight: "600",
+    backgroundColor: "#1a1a1a",
+    color: "#eee",
   },
+
   message: {
-    color: "#f88",
-    fontWeight: "bold",
+    marginBottom: 16,
+    color: "#ff6666",
+    fontWeight: "700",
   },
+
+  spinner: {
+    border: "3px solid #eee",
+    borderTop: "3px solid #ff4b45",
+    borderRadius: "50%",
+    width: 18,
+    height: 18,
+    animation: "spin 1s linear infinite",
+    display: "inline-block",
+  },
+
   linkButton: {
     background: "none",
     border: "none",
-    color: "#4ea1f3",
-    textDecoration: "underline",
+    color: "#ff4b45",
     cursor: "pointer",
+    fontWeight: "700",
+    textDecoration: "underline",
+    fontSize: 14,
+    padding: 0,
   },
-  spinner: {
-    display: "inline-block",
-    width: 16,
-    height: 16,
-    border: "2px solid #fff",
-    borderTop: "2px solid transparent",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
-  },
+
   footer: {
     marginTop: "auto",
-    paddingTop: 20,
+    paddingTop: 30,
     textAlign: "center",
   },
+
   followButton: {
     display: "inline-flex",
     alignItems: "center",
-    backgroundColor: "#2a2a2a",
-    color: "#fff",
-    padding: "8px 16px",
-    borderRadius: 8,
+    gap: 6,
+    backgroundColor: "#ff4b45",
+    color: "#eee",
+    padding: "12px 28px",
+    borderRadius: 12,
     textDecoration: "none",
-    border: "1px solid #444",
+    fontWeight: "bold",
+    fontSize: 16,
     cursor: "pointer",
+    userSelect: "none",
     transition: "all 0.3s ease",
   },
 };
-               
+    
