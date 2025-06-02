@@ -502,12 +502,16 @@ const styles = {
   },
 };
 
-/* Add spinner keyframes */
-<style jsx global>{`
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-`}</style>;
-  
+<>
+  <main>
+    {/* ... UI content ... */}
+
+    <style jsx global>{`
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    `}</style>
+  </main>
+</>
