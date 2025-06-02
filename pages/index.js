@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+ import { useEffect, useState } from "react";
 
 export default function Home() {
   const projects = [
@@ -27,6 +27,7 @@ export default function Home() {
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
@@ -49,18 +50,22 @@ export default function Home() {
   const formattedTime = dateTime.toLocaleTimeString();
 
   // Signup handler
-  function handleSignup(e) {
+  async function handleSignup(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
       setMessage("Please fill in both fields.");
       return;
     }
 
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 1000));
+
     const usersJSON = localStorage.getItem("users");
     const users = usersJSON ? JSON.parse(usersJSON) : {};
 
     if (users[formUsername]) {
       setMessage("Username already exists. Please login or choose another.");
+      setLoading(false);
       return;
     }
 
@@ -70,15 +75,19 @@ export default function Home() {
     setFormUsername("");
     setFormPassword("");
     setView("login");
+    setLoading(false);
   }
 
   // Login handler
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
       setMessage("Please fill in both fields.");
       return;
     }
+
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 1000));
 
     const usersJSON = localStorage.getItem("users");
     const users = usersJSON ? JSON.parse(usersJSON) : {};
@@ -93,6 +102,7 @@ export default function Home() {
     } else {
       setMessage("Invalid username or password.");
     }
+    setLoading(false);
   }
 
   function handleLogout() {
@@ -101,27 +111,51 @@ export default function Home() {
     setView("home");
   }
 
+  // Placeholder avatar URL (you can replace this with actual user avatars)
+  const avatarUrl = "https://i.pravatar.cc/40?u=" + user;
+
   return (
     <main style={styles.container}>
-      <header style={styles.header}>
+      {/* Sticky Header */}
+      <header style={styles.stickyHeader}>
         <h1 style={styles.title}>My Projects</h1>
-        <nav>
+        <nav style={styles.nav}>
           {!user ? (
             <>
-              <button style={styles.navButton} onClick={() => { setView("login"); setMessage(""); }}>
+              <button
+                style={styles.navButton}
+                onClick={() => {
+                  setView("login");
+                  setMessage("");
+                }}
+                disabled={loading}
+              >
                 Login
               </button>
-              <button style={styles.navButton} onClick={() => { setView("signup"); setMessage(""); }}>
+              <button
+                style={styles.navButton}
+                onClick={() => {
+                  setView("signup");
+                  setMessage("");
+                }}
+                disabled={loading}
+              >
                 Sign Up
               </button>
             </>
           ) : (
-            <>
-              <span style={{ marginRight: 15, fontWeight: "600" }}>Welcome, {user}!</span>
-              <button style={styles.navButton} onClick={handleLogout}>
+            <div style={styles.userProfile}>
+              <img
+                src={avatarUrl}
+                alt={`${user} avatar`}
+                style={styles.avatar}
+                draggable={false}
+              />
+              <span style={styles.welcomeText}>Welcome, {user}!</span>
+              <button style={styles.navButton} onClick={handleLogout} disabled={loading}>
                 Logout
               </button>
-            </>
+            </div>
           )}
         </nav>
       </header>
@@ -136,11 +170,17 @@ export default function Home() {
 
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
-              <div key={project.name} style={styles.projectCard} className="project-card">
+              <div
+                key={project.name}
+                style={styles.projectCard}
+                className="project-card"
+              >
                 <h2 style={styles.projectName}>{project.name}</h2>
                 <p style={styles.projectDesc}>{project.description}</p>
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
-                  <button style={styles.button} className="visit-button">Visit</button>
+                  <button style={styles.button} className="visit-button" disabled={loading}>
+                    Visit
+                  </button>
                 </a>
               </div>
             ))}
@@ -149,7 +189,10 @@ export default function Home() {
       )}
 
       {(view === "login" || view === "signup") && (
-        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
+        <form
+          onSubmit={view === "login" ? handleLogin : handleSignup}
+          style={styles.form}
+        >
           <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
           {message && <p style={styles.message}>{message}</p>}
           <input
@@ -159,6 +202,7 @@ export default function Home() {
             onChange={(e) => setFormUsername(e.target.value)}
             style={styles.input}
             autoComplete="username"
+            disabled={loading}
           />
           <input
             type="password"
@@ -167,22 +211,45 @@ export default function Home() {
             onChange={(e) => setFormPassword(e.target.value)}
             style={styles.input}
             autoComplete={view === "login" ? "current-password" : "new-password"}
+            disabled={loading}
           />
-          <button type="submit" style={styles.button}>
-            {view === "login" ? "Login" : "Sign Up"}
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? (
+              <span style={styles.spinner} aria-label="loading"></span>
+            ) : view === "login" ? (
+              "Login"
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <p style={{ marginTop: 12 }}>
             {view === "login" ? (
               <>
                 Don't have an account?{" "}
-                <button type="button" style={styles.linkButton} onClick={() => { setView("signup"); setMessage(""); }}>
+                <button
+                  type="button"
+                  style={styles.linkButton}
+                  onClick={() => {
+                    setView("signup");
+                    setMessage("");
+                  }}
+                  disabled={loading}
+                >
                   Sign Up
                 </button>
               </>
             ) : (
               <>
                 Already have an account?{" "}
-                <button type="button" style={styles.linkButton} onClick={() => { setView("login"); setMessage(""); }}>
+                <button
+                  type="button"
+                  style={styles.linkButton}
+                  onClick={() => {
+                    setView("login");
+                    setMessage("");
+                  }}
+                  disabled={loading}
+                >
                   Login
                 </button>
               </>
@@ -231,6 +298,11 @@ export default function Home() {
         .follow-button:active {
           transform: scale(0.95);
         }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
+        }
       `}</style>
     </main>
   );
@@ -244,147 +316,211 @@ function FacebookIcon() {
       height="20"
       viewBox="0 0 24 24"
       width="20"
-      fill="#E94560"
+      fill="currentColor"
+      aria-hidden="true"
     >
-      <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.406.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.764v2.313h3.59l-.467 3.622h-3.123V24h6.116C23.406 24 24 23.406 24 22.674V1.326C24 .593 23.406 0 22.675 0z" />
+      <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2c0-2 1-3 3-3h2v3h-2c-.5 0-1 .5-1 1v2h3l-1 3h-2v7A10 10 0 0 0 22 12z" />
     </svg>
   );
 }
 
 const styles = {
   container: {
-    maxWidth: 700,
-    margin: "50px auto",
-    padding: "0 25px 60px",
+    maxWidth: 860,
+    margin: "0 auto",
+    padding: 20,
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    textAlign: "center",
-    backgroundColor: "#b22222", // firebrick red
+    backgroundColor: "#1a1a1a",
+    color: "#eee",
     minHeight: "100vh",
-    color: "#fff",
-    boxSizing: "border-box",
-    borderRadius: 12,
+    display: "flex",
+    flexDirection: "column",
   },
-  header: {
+
+  stickyHeader: {
+    position: "sticky",
+    top: 0,
+    backgroundColor: "#222",
+    padding: "12px 20px",
+    borderRadius: "0 0 12px 12px",
+    zIndex: 100,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    boxShadow: "0 3px 8px rgba(0,0,0,0.8)",
   },
+
   title: {
-    fontSize: 44,
+    fontSize: 24,
     margin: 0,
-    fontWeight: "700",
-    textShadow: "2px 2px 5px rgba(0,0,0,0.3)",
   },
-  navButton: {
-    marginLeft: 12,
-    backgroundColor: "#ff6f61",
-    border: "none",
-    borderRadius: 10,
-    padding: "8px 16px",
-    color: "#4b0000",
-    fontWeight: "700",
-    cursor: "pointer",
-    fontSize: 15,
-    boxShadow: "0 2px 10px rgba(255,111,97,0.6)",
-    transition: "background-color 0.3s ease",
-  },
-  dateTime: {
-    fontSize: 15,
-    color: "#ffb3b3",
-    marginBottom: 35,
-    fontWeight: "600",
-    textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-  },
-  description: {
-    fontSize: 20,
-    marginBottom: 35,
-    color: "#ffdede",
-    textShadow: "1px 1px 3px rgba(0,0,0,0.2)",
-  },
-  projectsContainer: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: 28,
-  },
-  projectCard: {
-    padding: 24,
-    borderRadius: 16,
-    boxShadow:
-      "0 4px 18px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.25)",
-    backgroundColor: "#8b0000", // dark red
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-    cursor: "default",
-  },
-  projectName: {
-    fontSize: 26,
-    marginBottom: 8,
-    color: "#ff6f61", // pastel red-ish
-    textShadow: "1px 1px 3px rgba(0,0,0,0.3)",
-  },
-  projectDesc: {
-    fontSize: 17,
-    marginBottom: 18,
-    color: "#ffb3b3",
-  },
-  button: {
-    padding: "10px 26px",
-    fontSize: 16,
-    fontWeight: "700",
-    cursor: "pointer",
-    backgroundColor: "#ff6f61",
-    border: "none",
-    borderRadius: 10,
-    color: "#4b0000",
-    boxShadow: "0 2px 10px rgba(255,111,97,0.6)",
-    transition: "background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease",
-  },
-  footer: {
-    marginTop: 50,
-  },
-  followButton: {
-    display: "inline-flex",
+
+  nav: {
+    display: "flex",
     alignItems: "center",
-    fontSize: 19,
-    fontWeight: "700",
-    textDecoration: "none",
-    color: "#E94560",
-    border: "2px solid #E94560",
-    padding: "10px 24px",
-    borderRadius: 35,
-    transition: "background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease",
+    gap: 12,
   },
-  form: {
-    backgroundColor: "#8b0000",
-    padding: 30,
-    borderRadius: 20,
-    boxShadow: "0 4px 18px rgba(0,0,0,0.4)",
-    maxWidth: 400,
-    margin: "auto",
-  },
-  input: {
-    display: "block",
-    width: "100%",
-    padding: 10,
-    m
-arginBottom: 18,
-    borderRadius: 8,
+
+  navButton: {
+    backgroundColor: "#ff4b45",
     border: "none",
-    fontSize: 16,
+    borderRadius: 6,
+    padding: "6px 14px",
+    color: "#eee",
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    fontSize: 14,
   },
-  message: {
-    marginBottom: 18,
-    color: "#ffb3b3",
+
+  userProfile: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+  },
+
+  avatar: {
+    width: 36,
+    height: 36,
+    borderRadius: "50%",
+    objectFit: "cover",
+  },
+
+  welcomeText: {
+    fontSize: 16,
     fontWeight: "600",
   },
+
+  dateTime: {
+    marginTop: 12,
+    textAlign: "center",
+    fontSize: 16,
+    opacity: 0.8,
+  },
+
+  description: {
+    marginTop: 24,
+    marginBottom: 20,
+    fontSize: 18,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+
+  projectsContainer: {
+    display: "flex",
+    gap: 20,
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+
+  projectCard: {
+    backgroundColor: "#292929",
+    borderRadius: 12,
+    padding: 20,
+    width: 260,
+    boxShadow: "0 4px 10px rgba(0,0,0,0.6)",
+    cursor: "default",
+    userSelect: "none",
+    transition: "all 0.25s ease",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+
+  projectName: {
+    margin: 0,
+    marginBottom: 8,
+    fontSize: 22,
+    fontWeight: "700",
+  },
+
+  projectDesc: {
+    fontSize: 15,
+    marginBottom: 20,
+    opacity: 0.75,
+  },
+
+  button: {
+    backgroundColor: "#ff4b45",
+    color: "#eee",
+    border: "none",
+    borderRadius: 8,
+    padding: "10px 20px",
+    fontWeight: "700",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    userSelect: "none",
+    fontSize: 15,
+  },
+
+  form: {
+    backgroundColor: "#292929",
+    borderRadius: 12,
+    padding: 30,
+    maxWidth: 360,
+    margin: "24px auto 0 auto",
+    display: "flex",
+    flexDirection: "column",
+  },
+
+  input: {
+    marginBottom: 16,
+    padding: 10,
+    borderRadius: 6,
+    border: "none",
+    fontSize: 16,
+    fontWeight: "600",
+    backgroundColor: "#1a1a1a",
+    color: "#eee",
+  },
+
+  message: {
+    marginBottom: 16,
+    color: "#ff6666",
+    fontWeight: "700",
+  },
+
+  spinner: {
+    border: "3px solid #eee",
+    borderTop: "3px solid #ff4b45",
+    borderRadius: "50%",
+    width: 18,
+    height: 18,
+    animation: "spin 1s linear infinite",
+    display: "inline-block",
+  },
+
   linkButton: {
     background: "none",
     border: "none",
-    color: "#ff6f61",
+    color: "#ff4b45",
     cursor: "pointer",
     fontWeight: "700",
     textDecoration: "underline",
+    fontSize: 14,
     padding: 0,
-    fontSize: 15,
+  },
+
+  footer: {
+    marginTop: "auto",
+    paddingTop: 30,
+    textAlign: "center",
+  },
+
+  followButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "#ff4b45",
+    color: "#eee",
+    padding: "12px 28px",
+    borderRadius: 12,
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: 16,
+    cursor: "pointer",
+    userSelect: "none",
+    transition: "all 0.3s ease",
   },
 };
+    
