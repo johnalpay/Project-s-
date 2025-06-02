@@ -114,158 +114,262 @@ export default function Home() {
   const avatarUrl = "https://i.pravatar.cc/40?u=" + user;
 
   return (
-    <main style={styles.container}>
-      <header style={styles.stickyHeader}>
-        <h1 style={styles.title}>My Projects</h1>
-        <nav style={styles.nav}>
-          {!user ? (
-            <>
-              <button style={styles.navButton} onClick={() => { setView("login"); setMessage(""); }} disabled={loading}>Login</button>
-              <button style={styles.navButton} onClick={() => { setView("signup"); setMessage(""); }} disabled={loading}>Sign Up</button>
-            </>
-          ) : (
-            <div style={styles.userProfile}>
-              <img src={avatarUrl} alt={`${user} avatar`} style={styles.avatar} />
-              <span style={styles.welcomeText}>Welcome, {user}!</span>
-              <button style={styles.navButton} onClick={handleLogout} disabled={loading}>Logout</button>
-            </div>
-          )}
-        </nav>
-      </header>
-
-      <div style={styles.dateTime}>
-        <span>{formattedDate}</span> | <span>{formattedTime}</span>
-      </div>
-
-      {view === "home" && (
-        <>
-          <p style={styles.description}>Here are the websites I have built.</p>
-          <div style={styles.projectsContainer}>
-            {projects.map((project) => (
-              <div key={project.name} style={styles.projectCard} className="project-card">
-                <h2 style={styles.projectName}>{project.name}</h2>
-                <p style={styles.projectDesc}>{project.description}</p>
-                <a href={project.url} target="_blank" rel="noopener noreferrer">
-                  <button style={styles.button} className="visit-button" disabled={loading}>
-                    Visit
-                  </button>
-                </a>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {(view === "login" || view === "signup") && (
-        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
-          <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
-          {message && <p style={styles.message}>{message}</p>}
-          <input type="text" placeholder="Username" value={formUsername} onChange={(e) => setFormUsername(e.target.value)} style={styles.input} autoComplete="username" disabled={loading} />
-          <input type="password" placeholder="Password" value={formPassword} onChange={(e) => setFormPassword(e.target.value)} style={styles.input} autoComplete={view === "login" ? "current-password" : "new-password"} disabled={loading} />
-          <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? <span style={styles.spinner} aria-label="loading"></span> : view === "login" ? "Login" : "Sign Up"}
-          </button>
-          <p style={{ marginTop: 12 }}>
-            {view === "login" ? (
-              <>
-                Don't have an account?{" "}
-                <button type="button" style={styles.linkButton} onClick={() => { setView("signup"); setMessage(""); }} disabled={loading}>Sign Up</button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button type="button" style={styles.linkButton} onClick={() => { setView("login"); setMessage(""); }} disabled={loading}>Login</button>
-              </>
-            )}
-          </p>
-        </form>
-      )}
-
-      <footer style={styles.footer}>
-        <a href="https://www.facebook.com/profile.php?id=61576992292379" target="_blank" rel="noopener noreferrer" style={styles.followButton} className="follow-button">
-          <FacebookIcon /> Follow me on Facebook
-        </a>
-      </footer>
-
-      <style jsx>{`
-        .project-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 12px 24px rgba(255, 0, 0, 0.6);
-        }
-        .visit-button:hover {
-          background-color: #b22222;
-          box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
-          transform: scale(1.05);
-        }
-        .visit-button:active {
-          transform: scale(0.98);
-        }
-        .follow-button:hover {
-          background-color: #b22222;
-          color: #fff;
-          border-color: #7a1212;
-          box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
-          transform: scale(1.07);
-        }
-        .follow-button:active {
-          transform: scale(0.95);
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg);}
-          100% { transform: rotate(360deg);}
+    <>
+      <style jsx global>{`
+        /* Remove default body margin/padding for full screen */
+        body, html, #__next {
+          margin: 0;
+          padding: 0;
+          width: 100vw;
+          height: 100vh;
+          overflow-x: hidden;
+          background-color: #111;
+          color: #eee;
+          font-family: 'Segoe UI', sans-serif;
         }
       `}</style>
-    </main>
+      <main style={styles.container}>
+        <header style={styles.stickyHeader}>
+          <h1 style={styles.title}>My Projects</h1>
+          <nav style={styles.nav}>
+            {!user ? (
+              <>
+                <button
+                  style={styles.navButton}
+                  onClick={() => {
+                    setView("login");
+                    setMessage("");
+                  }}
+                  disabled={loading}
+                >
+                  Login
+                </button>
+                <button
+                  style={styles.navButton}
+                  onClick={() => {
+                    setView("signup");
+                    setMessage("");
+                  }}
+                  disabled={loading}
+                >
+                  Sign Up
+                </button>
+              </>
+            ) : (
+              <div style={styles.userProfile}>
+                <img
+                  src={avatarUrl}
+                  alt={`${user} avatar`}
+                  style={styles.avatar}
+                />
+                <span style={styles.welcomeText}>Welcome, {user}!</span>
+                <button
+                  style={styles.navButton}
+                  onClick={handleLogout}
+                  disabled={loading}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </nav>
+        </header>
+
+        <div style={styles.dateTime}>
+          <span>{formattedDate}</span> | <span>{formattedTime}</span>
+        </div>
+
+        {view === "home" && (
+          <>
+            <p style={styles.description}>Here are the websites I have built.</p>
+            <div style={styles.projectsContainer}>
+              {projects.map((project) => (
+                <div
+                  key={project.name}
+                  style={styles.projectCard}
+                  className="project-card"
+                >
+                  <h2 style={styles.projectName}>{project.name}</h2>
+                  <p style={styles.projectDesc}>{project.description}</p>
+                  <a href={project.url} target="_blank" rel="noopener noreferrer">
+                    <button
+                      style={styles.button}
+                      className="visit-button"
+                      disabled={loading}
+                    >
+                      Visit
+                    </button>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {(view === "login" || view === "signup") && (
+          <form
+            onSubmit={view === "login" ? handleLogin : handleSignup}
+            style={styles.form}
+          >
+            <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
+            {message && <p style={styles.message}>{message}</p>}
+            <input
+              type="text"
+              placeholder="Username"
+              value={formUsername}
+              onChange={(e) => setFormUsername(e.target.value)}
+              style={styles.input}
+              autoComplete="username"
+              disabled={loading}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={formPassword}
+              onChange={(e) => setFormPassword(e.target.value)}
+              style={styles.input}
+              autoComplete={view === "login" ? "current-password" : "new-password"}
+              disabled={loading}
+            />
+            <button type="submit" style={styles.button} disabled={loading}>
+              {loading ? (
+                <span style={styles.spinner} aria-label="loading"></span>
+              ) : view === "login" ? (
+                "Login"
+              ) : (
+                "Sign Up"
+              )}
+            </button>
+            <p style={{ marginTop: 12 }}>
+              {view === "login" ? (
+                <>
+                  Don't have an account?{" "}
+                  <button
+                    type="button"
+                    style={styles.linkButton}
+                    onClick={() => {
+                      setView("signup");
+                      setMessage("");
+                    }}
+                    disabled={loading}
+                  >
+                    Sign Up
+                  </button>
+                </>
+              ) : (
+                <>
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    style={styles.linkButton}
+                    onClick={() => {
+                      setView("login");
+                      setMessage("");
+                    }}
+                    disabled={loading}
+                  >
+                    Login
+                  </button>
+                </>
+              )}
+            </p>
+          </form>
+        )}
+
+        <footer style={styles.footer}>
+          <a
+            href="https://www.facebook.com/profile.php?id=61576992292379"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.followButton}
+            className="follow-button"
+          >
+            <FacebookIcon /> Follow me on Facebook
+          </a>
+        </footer>
+
+        <style jsx>{`
+          .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(255, 0, 0, 0.6);
+          }
+          .visit-button:hover {
+            background-color: #b22222;
+            box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
+            transform: scale(1.05);
+          }
+          .visit-button:active {
+            transform: scale(0.98);
+          }
+          .follow-button:hover {
+            background-color: #b22222;
+            color: #fff;
+            border-color: #7a1212;
+            box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
+            transform: scale(1.07);
+          }
+          .follow-button:active {
+            transform: scale(0.96);
+          }
+        `}</style>
+      </main>
+    </>
   );
 }
 
-function FacebookIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 8 }} width="20" height="20" viewBox="0 0 24 24" fill="#fff">
-      <path d="M22.675 0h-21.35C.596 0 0 .596 0 1.333v21.333C0 23.404.596 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.41c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.098 2.797.142v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.596 1.325-1.334V1.333C24 .596 23.404 0 22.675 0z" />
-    </svg>
-  );
-}
+const FacebookIcon = () => (
+  <svg
+    style={{ marginRight: 8 }}
+    xmlns="http://www.w3.org/2000/svg"
+    height="16"
+    width="16"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M22 12a10 10 0 10-11.5 9.87v-6.98h-2.3v-2.9h2.3v-2.2c0-2.27 1.35-3.53 3.42-3.53.99 0 2.02.18 2.02.18v2.22h-1.14c-1.12 0-1.47.7-1.47 1.41v1.92h2.5l-.4 2.9h-2.1v6.98A10 10 0 0022 12z" />
+  </svg>
+);
 
 const styles = {
   container: {
     minHeight: "100vh",
-    width: "100vw",
-    padding: 20,
-    fontFamily: "'Segoe UI', sans-serif",
-    backgroundColor: "#111",
-    color: "#eee",
+    maxWidth: 960,
+    margin: "0 auto",
+    padding: "0 16px 32px",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
   },
   stickyHeader: {
     position: "sticky",
     top: 0,
-    background: "#1a1a1a",
-    width: "100%",
-    padding: 10,
-    zIndex: 100,
+    backgroundColor: "#111",
+    zIndex: 999,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottom: "1px solid #333",
+    padding: "16px 0",
   },
   title: {
-    fontSize: "1.8rem",
+    margin: 0,
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#eee",
   },
   nav: {
     display: "flex",
-    gap: 10,
     alignItems: "center",
+    gap: 12,
   },
   navButton: {
-    background: "#dc143c",
-    color: "#fff",
-    padding: "6px 12px",
-    border: "none",
+    backgroundColor: "transparent",
+    border: "2px solid #eee",
     borderRadius: 6,
+    color: "#eee",
     cursor: "pointer",
+    padding: "6px 14px",
+    fontWeight: "600",
+    fontSize: 14,
+    transition: "all 0.25s ease",
   },
   userProfile: {
     display: "flex",
@@ -274,103 +378,136 @@ const styles = {
   },
   avatar: {
     borderRadius: "50%",
-    width: 32,
-    height: 32,
+    width: 40,
+    height: 40,
+    objectFit: "cover",
   },
   welcomeText: {
-    fontSize: "0.9rem",
+    color: "#eee",
+    fontWeight: "600",
   },
   dateTime: {
-    margin: "10px 0",
-    fontSize: "1rem",
-    opacity: 0.8,
+    marginTop: 12,
+    fontSize: 14,
+    color: "#bbb",
+    textAlign: "center",
   },
   description: {
-    marginBottom: 20,
-    fontSize: "1.1rem",
+    fontSize: 18,
+    marginTop: 24,
+    textAlign: "center",
+    color: "#ccc",
   },
   projectsContainer: {
+    marginTop: 24,
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: 20,
-    width: "100%",
-    maxWidth: 1000,
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: 24,
   },
   projectCard: {
-    background: "#1e1e1e",
+    backgroundColor: "#222",
+    borderRadius: 12,
     padding: 20,
-    borderRadius: 10,
-    transition: "transform 0.2s, box-shadow 0.2s",
-  },
-  projectName: {
-    margin: "0 0 10px 0",
-    fontSize: "1.3rem",
-  },
-  projectDesc: {
-    margin: "0 0 15px 0",
-  },
-  button: {
-    backgroundColor: "#dc143c",
-    color: "#fff",
-    border: "none",
-    padding: "8px 16px",
-    borderRadius: 6,
-    cursor: "pointer",
-  },
-  form: {
+    boxShadow: "0 8px 20px rgba(0,0,0,0.5)",
+    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+    cursor: "default",
     display: "flex",
     flexDirection: "column",
-    background: "#1e1e1e",
-    padding: 20,
-    borderRadius: 10,
-    maxWidth: 400,
-    width: "100%",
+    justifyContent: "space-between",
+  },
+  projectName: {
+    margin: "0 0 12px",
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 20,
+  },
+  projectDesc: {
+    flexGrow: 1,
+    color: "#ddd",
+    marginBottom: 20,
+    fontSize: 14,
+  },
+  button: {
+    backgroundColor: "#d32f2f",
+    border: "none",
+    borderRadius: 8,
+    color: "#fff",
+    cursor: "pointer",
+    padding: "10px 14px",
+    fontWeight: "600",
+    fontSize: 16,
+    transition: "all 0.3s ease",
+  },
+  form: {
+    marginTop: 48,
+    maxWidth: 360,
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: 24,
+    backgroundColor: "#222",
+    borderRadius: 12,
+    boxShadow: "0 8px 20px rgba(0,0,0,0.7)",
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
   },
   input: {
-    margin: "10px 0",
-    padding: "10px",
+    padding: "10px 12px",
     borderRadius: 6,
-    border: "1px solid #555",
-    backgroundColor: "#333",
-    color: "#fff",
+    border: "1.5px solid #555",
+    backgroundColor: "#111",
+    color: "#eee",
+    fontSize: 16,
   },
   message: {
-    color: "#f88",
-    fontSize: "0.9rem",
-  },
-  spinner: {
-    display: "inline-block",
-    width: 16,
-    height: 16,
-    border: "2px solid #fff",
-    borderTop: "2px solid transparent",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
+    color: "#f44336",
+    fontWeight: "600",
+    fontSize: 14,
   },
   linkButton: {
     background: "none",
     border: "none",
-    color: "#dc143c",
+    color: "#d32f2f",
     cursor: "pointer",
     textDecoration: "underline",
+    fontSize: 14,
     padding: 0,
-    fontSize: "1rem",
+    fontWeight: "600",
+  },
+  spinner: {
+    display: "inline-block",
+    width: 18,
+    height: 18,
+    border: "3px solid #f44336",
+    borderTopColor: "transparent",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
   },
   footer: {
-    marginTop: 40,
-    padding: 20,
-    borderTop: "1px solid #333",
+    marginTop: "auto",
+    padding: 16,
+    textAlign: "center",
   },
   followButton: {
-    backgroundColor: "#dc143c",
-    color: "#fff",
-    padding: "10px 20px",
-    borderRadius: 6,
-    textDecoration: "none",
     display: "inline-flex",
     alignItems: "center",
-    fontWeight: "bold",
-    border: "1px solid transparent",
+    backgroundColor: "#d32f2f",
+    color: "#fff",
+    padding: "10px 16px",
+    borderRadius: 8,
+    textDecoration: "none",
+    fontWeight: "600",
+    fontSize: 16,
+    transition: "all 0.25s ease",
   },
 };
-    
+
+/* Add spinner keyframes */
+<style jsx global>{`
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`}</style>;
+  
