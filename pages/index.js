@@ -25,10 +25,8 @@ export default function Home() {
   ];
 
   const [dateTime, setDateTime] = useState(new Date());
-  const [view, setView] = useState("home"); // "home", "login", "signup"
+  const [view, setView] = useState("home");
   const [user, setUser] = useState(null);
-
-  // For form fields
   const [formUsername, setFormUsername] = useState("");
   const [formPassword, setFormPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -40,7 +38,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Check localStorage for logged in user
     const savedUser = localStorage.getItem("loggedInUser");
     if (savedUser) setUser(savedUser);
   }, []);
@@ -54,7 +51,6 @@ export default function Home() {
 
   const formattedTime = dateTime.toLocaleTimeString();
 
-  // Signup handler
   async function handleSignup(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -83,7 +79,6 @@ export default function Home() {
     setLoading(false);
   }
 
-  // Login handler
   async function handleLogin(e) {
     e.preventDefault();
     if (!formUsername || !formPassword) {
@@ -116,50 +111,23 @@ export default function Home() {
     setView("home");
   }
 
-  // Placeholder avatar URL (you can replace this with actual user avatars)
   const avatarUrl = "https://i.pravatar.cc/40?u=" + user;
 
   return (
     <main style={styles.container}>
-      {/* Sticky Header */}
       <header style={styles.stickyHeader}>
         <h1 style={styles.title}>My Projects</h1>
         <nav style={styles.nav}>
           {!user ? (
             <>
-              <button
-                style={styles.navButton}
-                onClick={() => {
-                  setView("login");
-                  setMessage("");
-                }}
-                disabled={loading}
-              >
-                Login
-              </button>
-              <button
-                style={styles.navButton}
-                onClick={() => {
-                  setView("signup");
-                  setMessage("");
-                }}
-                disabled={loading}
-              >
-                Sign Up
-              </button>
+              <button style={styles.navButton} onClick={() => { setView("login"); setMessage(""); }} disabled={loading}>Login</button>
+              <button style={styles.navButton} onClick={() => { setView("signup"); setMessage(""); }} disabled={loading}>Sign Up</button>
             </>
           ) : (
             <div style={styles.userProfile}>
-              <img
-                src={avatarUrl}
-                alt={`${user} avatar`}
-                style={styles.avatar}
-                draggable={false}
-              />
+              <img src={avatarUrl} alt={`${user} avatar`} style={styles.avatar} />
               <span style={styles.welcomeText}>Welcome, {user}!</span>
-              <button style={styles.navButton} onClick={handleLogout} disabled={loading}>
-                Logout
-              </button>
+              <button style={styles.navButton} onClick={handleLogout} disabled={loading}>Logout</button>
             </div>
           )}
         </nav>
@@ -172,14 +140,9 @@ export default function Home() {
       {view === "home" && (
         <>
           <p style={styles.description}>Here are the websites I have built.</p>
-
           <div style={styles.projectsContainer}>
             {projects.map((project) => (
-              <div
-                key={project.name}
-                style={styles.projectCard}
-                className="project-card"
-              >
+              <div key={project.name} style={styles.projectCard} className="project-card">
                 <h2 style={styles.projectName}>{project.name}</h2>
                 <p style={styles.projectDesc}>{project.description}</p>
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
@@ -194,69 +157,24 @@ export default function Home() {
       )}
 
       {(view === "login" || view === "signup") && (
-        <form
-          onSubmit={view === "login" ? handleLogin : handleSignup}
-          style={styles.form}
-        >
+        <form onSubmit={view === "login" ? handleLogin : handleSignup} style={styles.form}>
           <h2>{view === "login" ? "Login" : "Sign Up"}</h2>
           {message && <p style={styles.message}>{message}</p>}
-          <input
-            type="text"
-            placeholder="Username"
-            value={formUsername}
-            onChange={(e) => setFormUsername(e.target.value)}
-            style={styles.input}
-            autoComplete="username"
-            disabled={loading}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={formPassword}
-            onChange={(e) => setFormPassword(e.target.value)}
-            style={styles.input}
-            autoComplete={view === "login" ? "current-password" : "new-password"}
-            disabled={loading}
-          />
+          <input type="text" placeholder="Username" value={formUsername} onChange={(e) => setFormUsername(e.target.value)} style={styles.input} autoComplete="username" disabled={loading} />
+          <input type="password" placeholder="Password" value={formPassword} onChange={(e) => setFormPassword(e.target.value)} style={styles.input} autoComplete={view === "login" ? "current-password" : "new-password"} disabled={loading} />
           <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? (
-              <span style={styles.spinner} aria-label="loading"></span>
-            ) : view === "login" ? (
-              "Login"
-            ) : (
-              "Sign Up"
-            )}
+            {loading ? <span style={styles.spinner} aria-label="loading"></span> : view === "login" ? "Login" : "Sign Up"}
           </button>
           <p style={{ marginTop: 12 }}>
             {view === "login" ? (
               <>
                 Don't have an account?{" "}
-                <button
-                  type="button"
-                  style={styles.linkButton}
-                  onClick={() => {
-                    setView("signup");
-                    setMessage("");
-                  }}
-                  disabled={loading}
-                >
-                  Sign Up
-                </button>
+                <button type="button" style={styles.linkButton} onClick={() => { setView("signup"); setMessage(""); }} disabled={loading}>Sign Up</button>
               </>
             ) : (
               <>
                 Already have an account?{" "}
-                <button
-                  type="button"
-                  style={styles.linkButton}
-                  onClick={() => {
-                    setView("login");
-                    setMessage("");
-                  }}
-                  disabled={loading}
-                >
-                  Login
-                </button>
+                <button type="button" style={styles.linkButton} onClick={() => { setView("login"); setMessage(""); }} disabled={loading}>Login</button>
               </>
             )}
           </p>
@@ -264,14 +182,7 @@ export default function Home() {
       )}
 
       <footer style={styles.footer}>
-        <a
-          href="https://www.facebook.com/profile.php?id=61576992292379"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={styles.followButton}
-          aria-label="Follow on Facebook"
-          className="follow-button"
-        >
+        <a href="https://www.facebook.com/profile.php?id=61576992292379" target="_blank" rel="noopener noreferrer" style={styles.followButton} className="follow-button">
           <FacebookIcon /> Follow me on Facebook
         </a>
       </footer>
@@ -281,17 +192,14 @@ export default function Home() {
           transform: translateY(-8px);
           box-shadow: 0 12px 24px rgba(255, 0, 0, 0.6);
         }
-
         .visit-button:hover {
           background-color: #b22222;
           box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
           transform: scale(1.05);
         }
-
         .visit-button:active {
           transform: scale(0.98);
         }
-
         .follow-button:hover {
           background-color: #b22222;
           color: #fff;
@@ -299,11 +207,9 @@ export default function Home() {
           box-shadow: 0 6px 15px rgba(178, 34, 34, 0.7);
           transform: scale(1.07);
         }
-
         .follow-button:active {
           transform: scale(0.95);
         }
-
         @keyframes spin {
           0% { transform: rotate(0deg);}
           100% { transform: rotate(360deg);}
@@ -315,15 +221,7 @@ export default function Home() {
 
 function FacebookIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ marginRight: 8 }}
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="#fff"
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 8 }} width="20" height="20" viewBox="0 0 24 24" fill="#fff">
       <path d="M22.675 0h-21.35C.596 0 0 .596 0 1.333v21.333C0 23.404.596 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.41c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.098 2.797.142v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.596 1.325-1.334V1.333C24 .596 23.404 0 22.675 0z" />
     </svg>
   );
@@ -331,215 +229,150 @@ function FacebookIcon() {
 
 const styles = {
   container: {
-    maxWidth: 860,
-    margin: "0 auto",
-    padding: 20,
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    color: "#eee",
     minHeight: "100vh",
+    width: "100vw",
+    padding: 20,
+    fontFamily: "'Segoe UI', sans-serif",
+    backgroundColor: "#111",
+    color: "#eee",
     display: "flex",
     flexDirection: "column",
-
-    // Angasin style: black background with realistic red gradients on sides
-    backgroundColor: "#000",
-
-    backgroundImage: `
-      linear-gradient(to right, 
-        #8B0000 0%, 
-        transparent 50%, 
-        transparent 50%, 
-        #8B0000 100%)`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "60px 100%",
-    backgroundPosition: "left center, right center",
+    alignItems: "center",
   },
-
   stickyHeader: {
     position: "sticky",
     top: 0,
-    backgroundColor: "#111",
-    zIndex: 999,
-    padding: 12,
-    borderRadius: 3,
+    background: "#1a1a1a",
+    width: "100%",
+    padding: 10,
+    zIndex: 100,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    boxShadow: "0 4px 10px rgba(255, 0, 0, 0.5)",
+    borderBottom: "1px solid #333",
   },
-
   title: {
-    fontWeight: "bold",
-    fontSize: 22,
-    color: "#ff4444",
-    userSelect: "none",
+    fontSize: "1.8rem",
   },
-
   nav: {
     display: "flex",
-    gap: 12,
+    gap: 10,
     alignItems: "center",
   },
-
   navButton: {
-    backgroundColor: "#8B0000",
+    background: "#dc143c",
     color: "#fff",
+    padding: "6px 12px",
     border: "none",
-    padding: "8px 14px",
-    borderRadius: 4,
+    borderRadius: 6,
     cursor: "pointer",
-    fontWeight: "600",
-    transition: "background-color 0.3s ease",
   },
-
   userProfile: {
     display: "flex",
     alignItems: "center",
     gap: 10,
   },
-
   avatar: {
-    width: 40,
-    height: 40,
     borderRadius: "50%",
-    border: "2px solid #8B0000",
-    objectFit: "cover",
+    width: 32,
+    height: 32,
   },
-
   welcomeText: {
-    color: "#ff4444",
-    fontWeight: "600",
-    userSelect: "none",
-  },
-
-  dateTime: {
-    marginTop: 8,
-    fontWeight: "600",
-    color: "#ff4444",
-    textAlign: "center",
-    fontSize: 14,
-    userSelect: "none",
-  },
-
-  description: {
-    marginTop: 12,
-    fontWeight: "600",
-    fontSize: 17,
-    color: "#ccc",
-    textAlign: "center",
-  },
-
-  projectsContainer: {
-    marginTop: 20,
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 20,
-  },
-
-  projectCard: {
-    backgroundColor: "#1a0000",
-    padding: 18,
-    borderRadius: 8,
-    boxShadow: "0 6px 16px rgba(139,0,0,0.4)",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-  },
-
-  projectName: {
     fontWeight: "bold",
-    fontSize: 20,
-    color: "#ff4444",
-    marginBottom: 6,
-    userSelect: "none",
   },
-
+  dateTime: {
+    marginTop: 20,
+    marginBottom: 10,
+    fontSize: "0.95rem",
+  },
+  description: {
+    fontSize: "1.1rem",
+    marginBottom: 12,
+  },
+  projectsContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: 16,
+    width: "100%",
+  },
+  projectCard: {
+    background: "#1f1f1f",
+    padding: 20,
+    borderRadius: 10,
+    textAlign: "center",
+    transition: "transform 0.3s, box-shadow 0.3s",
+  },
+  projectName: {
+    fontSize: "1.2rem",
+    marginBottom: 8,
+  },
   projectDesc: {
-    fontSize: 14,
-    color: "#ddd",
+    fontSize: "0.95rem",
     marginBottom: 12,
-    minHeight: 38,
   },
-
   button: {
-    backgroundColor: "#a52a2a",
+    backgroundColor: "#dc143c",
+    color: "#fff",
     border: "none",
-    color: "#fff",
-    padding: "10px 14px",
-    borderRadius: 5,
-    fontWeight: "600",
-    cursor: "pointer",
-    userSelect: "none",
-    transition: "background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease",
-  },
-
-  form: {
-    marginTop: 30,
-    maxWidth: 400,
-    marginLeft: "auto",
-    marginRight: "auto",
-    backgroundColor: "#220000",
-    padding: 24,
-    borderRadius: 8,
-    boxShadow: "0 8px 24px rgba(178, 34, 34, 0.7)",
-    display: "flex",
-    flexDirection: "column",
-  },
-
-  input: {
-    marginBottom: 16,
-    padding: 12,
-    fontSize: 16,
+    padding: "8px 16px",
     borderRadius: 6,
-    border: "1px solid #8B0000",
-    backgroundColor: "#330000",
-    color: "#fff",
-    outlineColor: "#ff4444",
+    cursor: "pointer",
+    fontWeight: "bold",
   },
-
+  form: {
+    background: "#222",
+    padding: 20,
+    borderRadius: 10,
+    maxWidth: 400,
+    width: "100%",
+    textAlign: "center",
+    marginTop: 20,
+  },
   message: {
-    color: "#ff6666",
-    marginBottom: 12,
-    fontWeight: "600",
-    userSelect: "none",
+    color: "crimson",
+    marginBottom: 10,
   },
-
+  input: {
+    width: "100%",
+    padding: 10,
+    margin: "8px 0",
+    borderRadius: 6,
+    border: "1px solid #444",
+    background: "#111",
+    color: "#fff",
+  },
+  linkButton: {
+    background: "none",
+    border: "none",
+    color: "#dc143c",
+    cursor: "pointer",
+    textDecoration: "underline",
+  },
+  footer: {
+    marginTop: "auto",
+    padding: 20,
+    textAlign: "center",
+  },
+  followButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "10px 20px",
+    backgroundColor: "#dc143c",
+    color: "#fff",
+    borderRadius: 8,
+    fontWeight: "bold",
+    border: "2px solid transparent",
+    cursor: "pointer",
+    textDecoration: "none",
+  },
   spinner: {
     display: "inline-block",
     width: 16,
     height: 16,
-    border: "3px solid #fff",
-    borderTop: "3px solid transparent",
+    border: "2px solid #fff",
+    borderTop: "2px solid transparent",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
-  },
-
-  linkButton: {
-    background: "none",
-    border: "none",
-    color: "#ff4444",
-    cursor: "pointer",
-    fontWeight: "600",
-    padding: 0,
-  },
-
-  footer: {
-    marginTop: "auto",
-    padding: 18,
-    textAlign: "center",
-  },
-
-  followButton: {
-    backgroundColor: "#8B0000",
-    color: "#fff",
-    padding: "10px 22px",
-    borderRadius: 8,
-    fontWeight: "700",
-    fontSize: 16,
-    userSelect: "none",
-    display: "inline-flex",
-    alignItems: "center",
-    textDecoration: "none",
-    border: "2px solid #5c0000",
-    transition: "all 0.3s ease",
-    cursor: "pointer",
   },
 };
     
