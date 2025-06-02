@@ -1,5 +1,3 @@
-ikaw na mag tanggal, narito ang code, ikaw na bahala kung may sira ang code ko, tanggalin mo or mag add ka nalang dito
-pages/index.js
 import { useEffect, useState } from "react";
 
 export default function Home() {
