@@ -1,10 +1,10 @@
- import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const projects = [
     {
       name: "Lyrics",
-      url: "https://lyrics-liart.vercel.app/",
+      url: "https://lyrics-wheat.vercel.app/",
       description: "Lyrics Finder Website",
     },
     {
@@ -456,8 +456,8 @@ const styles = {
   form: {
     backgroundColor: "#292929",
     borderRadius: 12,
-    padding: 30,
-    maxWidth: 360,
+    padding: 100,
+    maxWidth: 100,
     margin: "24px auto 0 auto",
     display: "flex",
     flexDirection: "column",
