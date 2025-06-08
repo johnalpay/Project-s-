@@ -5,7 +5,7 @@ export default function Home() {
 
     {
       name: "Apple Music",
-      url: "https://gpt-4o-pro.vercel.app/",
+      url: "https://music-phi-neon.vercel.app/",
       description: "Music",
     },
     {
