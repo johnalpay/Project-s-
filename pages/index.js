@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const projects = [
+
     {
-      name: "Apple Music"
-      url: "https://music-phi-neon.vercel.app/"
-      description: "Music"
+      name: "Apple Music",
+      url: "https://gpt-4o-pro.vercel.app/",
+      description: "Music",
     },
     {
       name: "GPT4o-Pro",
