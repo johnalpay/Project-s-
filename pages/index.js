@@ -331,15 +331,15 @@ function FacebookIcon() {
 
 const styles = {
   container: {
-  width: "100vw",
-  minHeight: "100vh",
-  padding: "0 20px",
-  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  backgroundColor: "#1a1a1a",
-  color: "#eee",
-  display: "flex",
-  flexDirection: "column",
-  overflowX: "hidden",
+    maxWidth: 860,
+    margin: "0 auto",
+    padding: 20,
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    backgroundColor: "#1a1a1a",
+    color: "#eee",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
   },
 
   stickyHeader: {
@@ -528,4 +528,3 @@ const styles = {
     transition: "all 0.3s ease",
   },
 };
-    
