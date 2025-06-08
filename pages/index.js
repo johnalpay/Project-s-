@@ -3,6 +3,11 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const projects = [
     {
+      name: "GPT4o-Pro",
+      url: "https://gpt-4o-pro.vercel.app/",
+      description: "Chat with Gpt4o Pro",
+    },
+    {
       name: "Lyrics",
       url: "https://lyrics-wheat.vercel.app/",
       description: "Lyrics Finder Website",
