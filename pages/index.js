@@ -265,7 +265,7 @@ export default function Home() {
 
       <footer style={styles.footer}>
         <a
-          href="https://www.facebook.com/profile.php?id=61576992292379"
+          href="https://www.facebook.com/profile.php?id=61576287185623"
           target="_blank"
           rel="noopener noreferrer"
           style={styles.followButton}
