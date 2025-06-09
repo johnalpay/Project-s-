@@ -4,6 +4,11 @@ export default function Home() {
   const projects = [
 
     {
+      name: "Sms Bomb",
+      url: "https://sms-bomb-bay.vercel.app/",
+      description: "For scammers number only",
+    },
+    {
       name: "Apple Music",
       url: "https://music-phi-neon.vercel.app/",
       description: "Music",
